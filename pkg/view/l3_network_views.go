@@ -107,6 +107,7 @@ type IpRangeInventoryView struct {
 	L3NetworkUuid string `json:"l3NetworkUuid"`
 	LastOpDate    string `json:"lastOpDate"`
 	Name          string `json:"name"`
+	Description   string `json:"description"`
 	Netmask       string `json:"netmask"`
 	NetworkCidr   string `json:"networkCidr"`
 	PrefixLen     int    `json:"prefixLen"`
