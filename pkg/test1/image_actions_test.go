@@ -52,7 +52,7 @@ func TestZSClient_QueryImage2(t *testing.T) {
 	//params.AddQ("format!=vmtx")
 	//params.AddQ("status=Ready")
 	//params.AddQ("system=false")
-	params.AddQ("name=fd")
+	params.AddQ("name=huawei-win10-zm-克隆-镜像")
 	//params.AddQ("mediaType=DataVolumeTemplate")
 	//params.AddQ("backupStorage.zone.uuid=6e8191bfd57745f282f78cb013b732b6")
 	result, err := accountLoginCli.QueryImage(params)
@@ -138,7 +138,7 @@ func TestZSCliebt_QueryByZql(t *testing.T) {
 }
 
 func TestZSClient_GetImage(t *testing.T) {
-	r, err := accountLoginCli.GetImage("c7ad6441c19c4a4c8084ddb0c13200f2")
+	r, err := accessKeyAuthCli.GetImage("c06feb06b6ca4d519bc60cea7813baf0")
 	if err != nil {
 		golog.Errorf("ZSClient.GetImage error:%v", err)
 		return
@@ -157,9 +157,9 @@ func TestZSClient_CreateImage(t *testing.T) {
 			SystemTags: []string{"bootMode::Legacy"},
 		},
 		Params: param.AddImageDetailParam{
-			Name:               "CentOS-6.8-i386-LiveCD",
+			Name:               "Redis Image",
 			Description:        "接口image",
-			Url:                "http://172.20.15.213/rds/V3.14.1-p2/zstack-rds-3.14.1-p2_x86.qcow2",
+			Url:                "http://192.168.200.100/mirror/jiajian.chi/os/base/redis-by-packer-image-compressed.qcow2",
 			MediaType:          param.RootVolumeTemplate,
 			GuestOsType:        "Linux",
 			System:             false,

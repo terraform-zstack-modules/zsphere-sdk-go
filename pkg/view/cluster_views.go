@@ -12,4 +12,5 @@ type ClusterInventoryView struct {
 	Type           string `json:"type"`
 	Uuid           string `json:"uuid"`
 	ZoneUuid       string `json:"zoneUuid"`
+	Description    string `json:"description"`
 }
