@@ -2,31 +2,58 @@
 
 package view
 
-import (
-	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/param"
-)
+import "time"
 
+var _ = time.Now() // avoid unused import
+
+// LongJobInventoryView LongJob
 type LongJobInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	ApiId              string             `json:"apiId"`              // API ID used to associate with TaskProgress
-	JobName            string             `json:"jobName"`            // Job name
-	JobData            string             `json:"jobData"`            // Job data
-	JobResult          string             `json:"jobResult"`          // Job result
-	TargetResourceUuid string             `json:"targetResourceUuid"` // Target resource UUID
-	ManagementNodeUuid string             `json:"managementNodeUuid"` // Management node UUID
-	State              param.LongJobState `json:"state"`
-	ExecuteTime        int64              `json:"executeTime"`
+	Description string `json:"description,omitempty"`
+	ApiId string `json:"apiId,omitempty"`
+	JobName string `json:"jobName,omitempty"`
+	JobData string `json:"jobData,omitempty"`
+	JobResult string `json:"jobResult,omitempty"`
+	State string `json:"state,omitempty"`
+	TargetResourceUuid string `json:"targetResourceUuid,omitempty"`
+	ManagementNodeUuid string `json:"managementNodeUuid,omitempty"`
+	ParentUuid string `json:"parentUuid,omitempty"`
+	ExecuteTime int64 `json:"executeTime,omitempty"`
 }
 
-type TaskProgressInventoryView struct {
-	TaskUuid   string                      `json:"taskUuid"`
-	TaskName   string                      `json:"taskName"`
-	ParentUuid string                      `json:"parentUuid"`
-	Type       string                      `json:"type"`
-	Content    string                      `json:"content"`
-	Opaque     interface{}                 `json:"opaque"`
-	Time       int64                       `json:"time"`
-	SubTasks   []TaskProgressInventoryView `json:"subTasks"`
+// CleanLongJobEventView CleanLongJobEvent
+type CleanLongJobEventView struct {
+	Success bool `json:"success,omitempty"`
 }
+
+// UpdateClusterOSEventView UpdateClusterOSEvent
+type UpdateClusterOSEventView struct {
+	Inventory LongJobInventoryView `json:"inventory,omitempty"`
+}
+
+// ResumeLongJobEventView ResumeLongJobEvent
+type ResumeLongJobEventView struct {
+	Inventory LongJobInventoryView `json:"inventory,omitempty"`
+}
+
+// BatchCreateBaremetalChassisEventView BatchCreateBaremetalChassisEvent
+type BatchCreateBaremetalChassisEventView struct {
+	Inventory LongJobInventoryView `json:"inventory,omitempty"`
+}
+
+// DeleteLongJobEventView DeleteLongJobEvent
+type DeleteLongJobEventView struct {
+	Success bool `json:"success,omitempty"`
+}
+
+// UpdateLongJobEventView UpdateLongJobEvent
+type UpdateLongJobEventView struct {
+	Inventory LongJobInventoryView `json:"inventory,omitempty"`
+}
+
+// QueryLongJobView QueryLongJob
+type QueryLongJobView struct {
+	Inventories []LongJobInventoryView `json:"inventories,omitempty"`
+}
+

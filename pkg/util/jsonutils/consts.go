@@ -2,7 +2,9 @@
 
 package jsonutils
 
-import "github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/util/reflectutils"
+import (
+	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/util/reflectutils"
+)
 
 const (
 	TagDeprecatedBy = reflectutils.TagDeprecatedBy

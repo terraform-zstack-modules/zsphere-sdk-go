@@ -2,31 +2,44 @@
 
 package view
 
-type VolumeSnapshotGroupView struct {
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// VolumeSnapshotGroupInventoryView VolumeSnapshotGroup
+type VolumeSnapshotGroupInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	SnapshotCount      int                     `json:"snapshotCount"`  // Number of snapshots in the group
-	VmInstanceUuid     string                  `json:"vmInstanceUuid"` // Cloud host UUID
-	VolumeSnapshotRefs []VolumeSnapshotRefView `json:"volumeSnapshotRefs"`
+	SnapshotCount int `json:"snapshotCount,omitempty"`
+	Description string `json:"description,omitempty"`
+	VmInstanceUuid string `json:"vmInstanceUuid,omitempty"`
+	VolumeSnapshotRefs []VolumeSnapshotGroupRefInventoryView `json:"volumeSnapshotRefs,omitempty"`
 }
 
-type VolumeSnapshotRefView struct {
-	BaseTimeView
-
-	VolumeSnapshotUuid        string `json:"volumeSnapshotUuid"`        // Cloud disk snapshot UUID
-	VolumeSnapshotGroupUuid   string `json:"volumeSnapshotGroupUuid"`   // Snapshot group UUID
-	DeviceId                  int    `json:"deviceId"`                  // Mount sequence number of the cloud disk when the snapshot was taken
-	SnapshotDeleted           bool   `json:"snapshotDeleted"`           // Whether the snapshot has been deleted
-	VolumeUuid                string `json:"volumeUuid"`                // Cloud disk UUID
-	VolumeName                string `json:"volumeName"`                // Name of the cloud disk
-	VolumeType                string `json:"volumeType"`                // Type of the cloud disk
-	VolumeSnapshotInstallPath string `json:"volumeSnapshotInstallPath"` // Installation path of the snapshot
-	VolumeSnapshotName        string `json:"volumeSnapshotName"`        // Name of the snapshot
+// CreateVolumeSnapshotGroupEventView CreateVolumeSnapshotGroupEvent
+type CreateVolumeSnapshotGroupEventView struct {
+	Inventory VolumeSnapshotGroupInventoryView `json:"inventory,omitempty"`
 }
 
-type VolumeSnapshotGroupAvailabilityView struct {
-	UUID      string `json:"uuid"`      // Resource UUID, uniquely identifies the resource
-	Available bool   `json:"available"` // Whether it can be restored
-	Reason    string `json:"reason"`    // Reason for not being able to restore, empty if it can be restored
+// UpdateVolumeSnapshotGroupEventView UpdateVolumeSnapshotGroupEvent
+type UpdateVolumeSnapshotGroupEventView struct {
+	Inventory VolumeSnapshotGroupInventoryView `json:"inventory,omitempty"`
 }
+
+// DeleteVolumeSnapshotGroupEventView DeleteVolumeSnapshotGroupEvent
+type DeleteVolumeSnapshotGroupEventView struct {
+	Results []DeleteSnapshotGroupResultView `json:"results,omitempty"`
+}
+
+// QueryVolumeSnapshotGroupView QueryVolumeSnapshotGroup
+type QueryVolumeSnapshotGroupView struct {
+	Inventories []VolumeSnapshotGroupInventoryView `json:"inventories,omitempty"`
+}
+
+// GetMemorySnapshotGroupReferenceView GetMemorySnapshotGroupReference
+type GetMemorySnapshotGroupReferenceView struct {
+	Inventories []VolumeSnapshotGroupInventoryView `json:"inventories,omitempty"`
+	ResourceUuid string `json:"resourceUuid,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+

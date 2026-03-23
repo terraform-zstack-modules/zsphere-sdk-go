@@ -3,32 +3,48 @@
 package client
 
 import (
+	"context"
+
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/param"
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/view"
 )
 
-// QueryPrimaryStorage Query primary storage
-func (cli *ZSClient) QueryPrimaryStorage(params param.QueryParam) ([]view.PrimaryStorageInventoryView, error) {
-	var views []view.PrimaryStorageInventoryView
-	return views, cli.List("v1/primary-storage", &params, &views)
+var _ = param.BaseParam{} // avoid unused import
+var _ view.MapView // avoid unused import
+
+// UpdatePrimaryStorage updates PrimaryStorage
+func (cli *ZSClient) UpdatePrimaryStorage(ctx context.Context, uuid string, params param.UpdatePrimaryStorageParam) (*view.PrimaryStorageInventoryView, error) {
+	resp := view.PrimaryStorageInventoryView{}
+	if err := cli.PutWithSpec(ctx, "v1/primary-storage", uuid, "actions", "inventory", map[string]interface{}{
+		"updatePrimaryStorage": params.Params,
+	}, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+// QueryPrimaryStorage queries PrimaryStorage list
+func (cli *ZSClient) QueryPrimaryStorage(ctx context.Context, params *param.QueryParam) ([]view.PrimaryStorageInventoryView, error) {
+	var resp []view.PrimaryStorageInventoryView
+	return resp, cli.List(ctx, "v1/primary-storage", params, &resp)
 }
 
-// PagePrimaryStorage Paginate query primary storage
-func (cli *ZSClient) PagePrimaryStorage(params param.QueryParam) ([]view.PrimaryStorageInventoryView, int, error) {
-	var views []view.PrimaryStorageInventoryView
-	total, err := cli.Page("v1/primary-storage", &params, &views)
-	return views, total, err
+// PagePrimaryStorage Pagination
+func (cli *ZSClient) PagePrimaryStorage(ctx context.Context, params *param.QueryParam) ([]view.PrimaryStorageInventoryView, int, error) {
+	var primaryStorages []view.PrimaryStorageInventoryView
+	total, err := cli.Page(ctx, "v1/primary-storage", params, &primaryStorages)
+	return primaryStorages, total, err
 }
-
-// QueryCephPrimaryStoragePool Query Ceph primary storage pool
-func (cli *ZSClient) QueryCephPrimaryStoragePool(params param.QueryParam) ([]view.CephPrimaryStoragePoolInventoryView, error) {
-	var views []view.CephPrimaryStoragePoolInventoryView
-	return views, cli.List("v1/primary-storage/ceph/pools", &params, &views)
+// ReconnectPrimaryStorage operates on PrimaryStorage
+func (cli *ZSClient) ReconnectPrimaryStorage(ctx context.Context, uuid string, params param.ReconnectPrimaryStorageParam) (*view.PrimaryStorageInventoryView, error) {
+	resp := view.PrimaryStorageInventoryView{}
+	if err := cli.PutWithSpec(ctx, "v1/primary-storage", uuid, "actions", "inventory", map[string]interface{}{
+		"reconnectPrimaryStorage": params.Params,
+	}, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
-
-// PageCephPrimaryStoragePool Paginate query Ceph primary storage pool
-func (cli *ZSClient) PageCephPrimaryStoragePool(params param.QueryParam) ([]view.CephPrimaryStoragePoolInventoryView, int, error) {
-	var views []view.CephPrimaryStoragePoolInventoryView
-	total, err := cli.Page("v1/primary-storage/ceph/pools", &params, &views)
-	return views, total, err
+// DeletePrimaryStorage deletes PrimaryStorage
+func (cli *ZSClient) DeletePrimaryStorage(ctx context.Context, uuid string, deleteMode param.DeleteMode) error {
+	return cli.Delete(ctx, "v1/primary-storage", uuid, string(deleteMode))
 }

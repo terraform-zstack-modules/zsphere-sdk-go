@@ -45,7 +45,7 @@ const (
 	DateExcelFormat       = "01-02-06"
 	MonthFormat           = "2006-01"
 	ShortMonthFormat      = "200601"
-	ZStackTimeFormat      = "Jan 2, 2006 15:04:05 PM"
+	ZStackTimeFormat      = "Jan 2, 2006 3:04:05 PM"
 
 	IsoTimeFormat2         = "2006-01-02 15:04:05Z07:00"
 	IsoNoSecondTimeFormat2 = "2006-01-02 15:04Z07:00"

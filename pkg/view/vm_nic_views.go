@@ -4,63 +4,98 @@ package view
 
 import "time"
 
+var _ = time.Now() // avoid unused import
+
+// VmNicInventoryView VmNic
 type VmNicInventoryView struct {
-	UUID           string   `json:"uuid"`           // Resource UUID, uniquely identifies the resource
-	VMInstanceUUID string   `json:"vmInstanceUuid"` // Cloud host UUID
-	L3NetworkUUID  string   `json:"l3NetworkUuid"`  // Layer 3 network UUID
-	IP             string   `json:"ip"`             // IP address
-	Mac            string   `json:"mac"`            // MAC address
-	HypervisorType string   `json:"hypervisorType"` // Hypervisor type
-	Netmask        string   `json:"netmask"`        // Subnet mask
-	Gateway        string   `json:"gateway"`        // Gateway
-	MetaData       string   `json:"metaData"`       // Reserved field for internal use, metadata
-	IpVersion      int      `json:"ipVersion"`      // IP address version
-	DeviceID       int      `json:"deviceId"`       // Device ID, an integer that identifies the order of the NIC in the guest operating system's Ethernet devices. For example, 0 usually represents eth0, 1 usually represents eth1.
-	DriverType     string   `json:"driverType"`     // NIC model
-	Type           string   `json:"type"`           // NIC type
-	CreateDate     string   `json:"createDate"`     // Creation time
-	LastOpDate     string   `json:"lastOpDate"`     // Last modification time
-	InternalName   string   `json:"internalName"`
-	UsedIps        []UsedIp `json:"usedIps"`
+	BaseInfoView
+	BaseTimeView
+	VmInstanceUuid string `json:"vmInstanceUuid,omitempty"`
+	L3NetworkUuid string `json:"l3NetworkUuid,omitempty"`
+	Ip string `json:"ip,omitempty"`
+	Mac string `json:"mac,omitempty"`
+	HypervisorType string `json:"hypervisorType,omitempty"`
+	Netmask string `json:"netmask,omitempty"`
+	Gateway string `json:"gateway,omitempty"`
+	MetaData string `json:"metaData,omitempty"`
+	DriverType string `json:"driverType,omitempty"`
+	UsedIps []UsedIpInventoryView `json:"usedIps,omitempty"`
+	InternalName string `json:"internalName,omitempty"`
+	DeviceId int `json:"deviceId,omitempty"`
+	Type string `json:"type,omitempty"`
+	State string `json:"state,omitempty"`
 }
 
-type UsedIp struct {
-	Uuid          string    `json:"uuid"`          // Resource UUID, uniquely identifies the resource
-	IpRangeUuid   string    `json:"ipRangeUuid"`   // IP range UUID
-	L3NetworkUuid string    `json:"l3NetworkUuid"` // Layer 3 network UUID
-	IpVersion     int       `json:"ipVersion"`     // IP protocol number
-	Ip            string    `json:"ip"`            // IP address
-	Netmask       string    `json:"netmask"`       // Network mask
-	Gateway       string    `json:"gateway"`       // Gateway address
-	UsedFor       string    `json:"usedFor"`       //
-	IpInLong      int64     `json:"ipInLong"`      //
-	VmNicUuid     string    `json:"vmNicUuid"`     // Cloud host NIC UUID
-	CreateDate    time.Time `json:"createDate"`    // Creation time
-	LastOpDate    time.Time `json:"lastOpDate"`    // Last modification time
+// ChangeVmNicTypeEventView ChangeVmNicTypeEvent
+type ChangeVmNicTypeEventView struct {
+	Inventory VmNicInventoryView `json:"inventory,omitempty"`
 }
 
-func GetIpFromUsedIps(usedIps []UsedIp) (ip string, ip6 string) {
-	for _, usedIp := range usedIps {
-		if usedIp.IpVersion == 4 {
-			ip = usedIp.Ip
-		}
-		if usedIp.IpVersion == 6 {
-			ip6 = usedIp.Ip
-		}
-	}
-	return
+// GetEipAttachableVmNicsView GetEipAttachableVmNics
+type GetEipAttachableVmNicsView struct {
+	Inventories []VmNicInventoryView `json:"inventories,omitempty"`
+	Start int `json:"start,omitempty"`
+	More bool `json:"more,omitempty"`
+	Success bool `json:"success,omitempty"`
 }
 
-type NicSimpleView struct {
-	Ip        string    `json:"ip"`
-	IpVersion string    `json:"ipVersion"`
-	Uuid      string    `json:"uuid"`
-	VmNicUuid string    `json:"vmNicUuid"`
-	VmNic     VmNicView `json:"vmNic"`
+// UpdateVmNicMacEventView UpdateVmNicMacEvent
+type UpdateVmNicMacEventView struct {
+	Inventory VmNicInventoryView `json:"inventory,omitempty"`
 }
 
-type VmNicView struct {
-	InternalName string `json:"internalName"`
-	Mac          string `json:"mac"`
-	Uuid         string `json:"uuid"`
+// CreateVmNicEventView CreateVmNicEvent
+type CreateVmNicEventView struct {
+	Inventory VmNicInventoryView `json:"inventory,omitempty"`
 }
+
+// GetPortForwardingAttachableVmNicsView GetPortForwardingAttachableVmNics
+type GetPortForwardingAttachableVmNicsView struct {
+	Inventories []VmNicInventoryView `json:"inventories,omitempty"`
+}
+
+// AttachL3NetworkToVmNicEventView AttachL3NetworkToVmNicEvent
+type AttachL3NetworkToVmNicEventView struct {
+	Inventory VmNicInventoryView `json:"inventory,omitempty"`
+}
+
+// QueryVmNicView QueryVmNic
+type QueryVmNicView struct {
+	Inventories []VmNicInventoryView `json:"inventories,omitempty"`
+}
+
+// UpdateVmNicDriverEventView UpdateVmNicDriverEvent
+type UpdateVmNicDriverEventView struct {
+	Inventory VmNicInventoryView `json:"inventory,omitempty"`
+}
+
+// ChangeVmNicNetworkEventView ChangeVmNicNetworkEvent
+type ChangeVmNicNetworkEventView struct {
+	Inventory VmNicInventoryView `json:"inventory,omitempty"`
+}
+
+// GetCandidateVmNicsForLoadBalancerServerGroupView GetCandidateVmNicsForLoadBalancerServerGroup
+type GetCandidateVmNicsForLoadBalancerServerGroupView struct {
+	Inventories []VmNicInventoryView `json:"inventories,omitempty"`
+}
+
+// GetCandidateVmNicForSecurityGroupView GetCandidateVmNicForSecurityGroup
+type GetCandidateVmNicForSecurityGroupView struct {
+	Inventories []VmNicInventoryView `json:"inventories,omitempty"`
+}
+
+// GetCandidateVmNicsForPortMirrorView GetCandidateVmNicsForPortMirror
+type GetCandidateVmNicsForPortMirrorView struct {
+	Inventories []VmNicInventoryView `json:"inventories,omitempty"`
+}
+
+// DeleteVmNicEventView DeleteVmNicEvent
+type DeleteVmNicEventView struct {
+	Success bool `json:"success,omitempty"`
+}
+
+// GetCandidateVmNicsForLoadBalancerView GetCandidateVmNicsForLoadBalancer
+type GetCandidateVmNicsForLoadBalancerView struct {
+	Inventories []VmNicInventoryView `json:"inventories,omitempty"`
+}
+

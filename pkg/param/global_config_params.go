@@ -2,16 +2,26 @@
 
 package param
 
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// UpdateGlobalConfigParamDetail UpdateGlobalConfig detail param
+type UpdateGlobalConfigParamDetail struct {
+	Value *string `json:"value,omitempty"`
+}
+
+// UpdateGlobalConfigParam UpdateGlobalConfig request param
 type UpdateGlobalConfigParam struct {
 	BaseParam
-	UpdateGlobalConfig UpdateConfigDetailParam `json:"updateGlobalConfig"`
+	Params UpdateGlobalConfigParamDetail `json:"updateGlobalConfig"`
+}
+// ResetGlobalConfigParamDetail ResetGlobalConfig detail param
+type ResetGlobalConfigParamDetail struct {
 }
 
-type UpdateConfigDetailParam struct {
-	Value string `json:"value"`
-}
-
-type UpdateResourceConfigParam struct {
+// ResetGlobalConfigParam ResetGlobalConfig request param
+type ResetGlobalConfigParam struct {
 	BaseParam
-	UpdateResourceConfig UpdateConfigDetailParam `json:"updateResourceConfig"`
+	Params ResetGlobalConfigParamDetail `json:"resetGlobalConfig"`
 }

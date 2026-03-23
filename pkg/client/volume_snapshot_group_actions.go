@@ -3,53 +3,55 @@
 package client
 
 import (
-	"strings"
+	"context"
+	"fmt"
 
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/param"
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/view"
 )
 
-func (cli *ZSClient) CreateVolumeSnapshotGroup(params param.VolumeSnapshotGroupParam) (*view.VolumeSnapshotGroupView, error) {
-	group := view.VolumeSnapshotGroupView{}
-	return &group, cli.Post("v1/volume-snapshots/group", &params, &group)
+var _ = param.BaseParam{} // avoid unused import
+var _ view.MapView // avoid unused import
+
+// CreateVolumeSnapshotGroup creates VolumeSnapshotGroup
+func (cli *ZSClient) CreateVolumeSnapshotGroup(ctx context.Context, params param.CreateVolumeSnapshotGroupParam) (*view.VolumeSnapshotGroupInventoryView, error) {
+	resp := view.VolumeSnapshotGroupInventoryView{}
+	if err := cli.PostWithRespKey(ctx, fmt.Sprintf("v1/volume-snapshots/group"), "inventory", params, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+// UpdateVolumeSnapshotGroup updates VolumeSnapshotGroup
+func (cli *ZSClient) UpdateVolumeSnapshotGroup(ctx context.Context, uuid string, params param.UpdateVolumeSnapshotGroupParam) (*view.VolumeSnapshotGroupInventoryView, error) {
+	resp := view.VolumeSnapshotGroupInventoryView{}
+	if err := cli.PutWithSpec(ctx, "v1/volume-snapshots/group", uuid, "actions", "inventory", map[string]interface{}{
+		"updateVolumeSnapshotGroup": params.Params,
+	}, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+// DeleteVolumeSnapshotGroup deletes VolumeSnapshotGroup
+func (cli *ZSClient) DeleteVolumeSnapshotGroup(ctx context.Context, uuid string, deleteMode param.DeleteMode) error {
+	return cli.Delete(ctx, "v1/volume-snapshots/group", uuid, string(deleteMode))
+}
+// QueryVolumeSnapshotGroup queries VolumeSnapshotGroup list
+func (cli *ZSClient) QueryVolumeSnapshotGroup(ctx context.Context, params *param.QueryParam) ([]view.VolumeSnapshotGroupInventoryView, error) {
+	var resp []view.VolumeSnapshotGroupInventoryView
+	return resp, cli.List(ctx, "v1/volume-snapshots/group", params, &resp)
 }
 
-func (cli *ZSClient) DeleteVolumeSnapshotGroup(uuid string, deleteMode param.DeleteMode) error {
-	return cli.Delete("v1/volume-snapshots/group", uuid, string(deleteMode))
+func (cli *ZSClient) GetVolumeSnapshotGroup(ctx context.Context, uuid string) (*view.VolumeSnapshotGroupInventoryView, error) {
+	var resp view.VolumeSnapshotGroupInventoryView
+	if err := cli.Get(ctx, "v1/volume-snapshots/group", uuid, nil, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
 
-func (cli *ZSClient) UpdateVolumeSnapshotGroup(uuid string, params param.UpdateVolumeSnapshotGroupParam) (*view.VolumeSnapshotGroupView, error) {
-	group := view.VolumeSnapshotGroupView{}
-	return &group, cli.Put("v1/volume-snapshots/group", uuid, &params, &group)
-}
-
-func (cli *ZSClient) QueryVolumeSnapshotGroup(params param.QueryParam) ([]view.VolumeSnapshotGroupView, error) {
-	groups := []view.VolumeSnapshotGroupView{}
-	return groups, cli.List("v1/volume-snapshots/group", &params, &groups)
-}
-
-func (cli *ZSClient) PageVolumeSnapshotGroup(params param.QueryParam) ([]view.VolumeSnapshotGroupView, int, error) {
-	groups := []view.VolumeSnapshotGroupView{}
-	total, err := cli.Page("v1/volume-snapshots/group", &params, &groups)
-	return groups, total, err
-}
-
-func (cli *ZSClient) GetVolumeSnapshotGroup(uuid string) (*view.VolumeSnapshotGroupView, error) {
-	group := view.VolumeSnapshotGroupView{}
-	return &group, cli.Get("v1/volume-snapshots/group", uuid, nil, &group)
-}
-
-func (cli *ZSClient) CheckVolumeSnapshotGroupAvailability(uuids []string) ([]view.VolumeSnapshotGroupAvailabilityView, error) {
-	params := param.NewQueryParam()
-	params.Add("uuids", strings.Join(uuids, ","))
-	availabilitys := []view.VolumeSnapshotGroupAvailabilityView{}
-	return availabilitys, cli.ListWithRespKey("v1/volume-snapshots/groups/availabilities", "results", &params, &availabilitys)
-}
-
-func (cli *ZSClient) RevertVmFromSnapshotGroup(uuid string) error {
-	return cli.Put("v1/volume-snapshots/group", uuid, map[string]struct{}{"revertVmFromSnapshotGroup": {}}, nil)
-}
-
-func (cli *ZSClient) UngroupVolumeSnapshotGroup(uuid string) error {
-	return cli.Delete("v1/volume-snapshots/ungroup", uuid, "")
+// PageVolumeSnapshotGroup Pagination
+func (cli *ZSClient) PageVolumeSnapshotGroup(ctx context.Context, params *param.QueryParam) ([]view.VolumeSnapshotGroupInventoryView, int, error) {
+	var volumeSnapshotGroups []view.VolumeSnapshotGroupInventoryView
+	total, err := cli.Page(ctx, "v1/volume-snapshots/group", params, &volumeSnapshotGroups)
+	return volumeSnapshotGroups, total, err
 }

@@ -3,52 +3,42 @@
 package client
 
 import (
+	"context"
+
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/param"
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/view"
 )
 
-// PageUsbDevice Paginated query of USB devices
-func (cli *ZSClient) PageUsbDevice(params param.QueryParam) ([]view.UsbDeviceView, int, error) {
-	usbs := []view.UsbDeviceView{}
-	total, err := cli.Page("v1/usb-device/usb-devices", &params, &usbs)
-	return usbs, total, err
-}
+var _ = param.BaseParam{} // avoid unused import
+var _ view.MapView // avoid unused import
 
-// QueryUsbDevice Query USB devices
-func (cli *ZSClient) QueryUsbDevice(params param.QueryParam) ([]view.UsbDeviceView, error) {
-	var usbs []view.UsbDeviceView
-	return usbs, cli.List("v1/usb-device/usb-devices", &params, &usbs)
-}
-
-// GetUsbDevice Get a specific USB device
-func (cli *ZSClient) GetUsbDevice(uuid string) (view.UsbDeviceView, error) {
-	var resp view.UsbDeviceView
-	return resp, cli.Get("v1/usb-device/usb-devices", uuid, nil, &resp)
-}
-
-// UpdateUsbDevice Update a USB device
-func (cli *ZSClient) UpdateUsbDevice(uuid string, params param.UpdateUsbDeviceParam) (view.UsbDeviceView, error) {
-	var resp view.UsbDeviceView
-	return resp, cli.Put("v1/usb-device/usb-devices", uuid, &params, &resp)
-}
-
-// AttachUsbDeviceToVm Attach a physical USB device to a cloud VM
-func (cli *ZSClient) AttachUsbDeviceToVm(usbDeviceUuid string, params param.AttachUsbDeviceToVmParam) (view.UsbDeviceView, error) {
-	var resp view.UsbDeviceView
-	return resp, cli.Post("v1/usb-device/usb-devices/"+usbDeviceUuid+"/attach", &params, &resp)
-}
-
-// DetachUsbDeviceFromVm Detach a USB device mounted on a cloud VM
-func (cli *ZSClient) DetachUsbDeviceFromVm(usbDeviceUuid string, params param.DetachUsbDeviceFromVmParam) error {
-	return cli.Post("v1/usb-device/usb-devices/"+usbDeviceUuid+"/detach", &params, nil)
-}
-
-// GetUsbDeviceCandidatesForAttachingVm Get the list of candidate USB devices for passthrough
-func (cli *ZSClient) GetUsbDeviceCandidatesForAttachingVm(vmInstanceUuid string, attachType param.AttachType) ([]view.UsbDeviceView, error) {
-	var usbs []view.UsbDeviceView
-	url := ""
-	if attachType != "" {
-		url = string("?attachType=" + attachType)
+// UpdateUsbDevice updates UsbDevice
+func (cli *ZSClient) UpdateUsbDevice(ctx context.Context, uuid string, params param.UpdateUsbDeviceParam) (*view.UsbDeviceInventoryView, error) {
+	resp := view.UsbDeviceInventoryView{}
+	if err := cli.PutWithSpec(ctx, "v1/usb-device/usb-devices", uuid, "actions", "inventory", map[string]interface{}{
+		"updateUsbDevice": params.Params,
+	}, &resp); err != nil {
+		return nil, err
 	}
-	return usbs, cli.Get("v1/vm-instances/", vmInstanceUuid+"/candidate-usb-devices"+url, nil, &usbs)
+	return &resp, nil
+}
+// QueryUsbDevice queries UsbDevice list
+func (cli *ZSClient) QueryUsbDevice(ctx context.Context, params *param.QueryParam) ([]view.UsbDeviceInventoryView, error) {
+	var resp []view.UsbDeviceInventoryView
+	return resp, cli.List(ctx, "v1/usb-device/usb-devices", params, &resp)
+}
+
+func (cli *ZSClient) GetUsbDevice(ctx context.Context, uuid string) (*view.UsbDeviceInventoryView, error) {
+	var resp view.UsbDeviceInventoryView
+	if err := cli.Get(ctx, "v1/usb-device/usb-devices", uuid, nil, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+// PageUsbDevice Pagination
+func (cli *ZSClient) PageUsbDevice(ctx context.Context, params *param.QueryParam) ([]view.UsbDeviceInventoryView, int, error) {
+	var usbDevices []view.UsbDeviceInventoryView
+	total, err := cli.Page(ctx, "v1/usb-device/usb-devices", params, &usbDevices)
+	return usbDevices, total, err
 }

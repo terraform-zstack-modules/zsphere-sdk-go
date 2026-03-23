@@ -7,7 +7,13 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/kataras/golog v0.1.7
 	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.4.0
 	moul.io/http2curl/v2 v2.3.0
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.0 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 )
 
 //require github.com/kr/text v0.2.0 // indirect

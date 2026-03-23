@@ -2,21 +2,42 @@
 
 package view
 
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// VirtualRouterOfferingInventoryView VirtualRouterOffering
 type VirtualRouterOfferingInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	CpuNum                int    `json:"cpuNum"`            // Number of CPUs
-	CpuSpeed              int    `json:"cpuSpeed"`          // CPU speed
-	MemorySize            int64  `json:"memorySize"`        // Memory size
-	Type                  string `json:"type"`              // Type
-	AllocatorStrategy     string `json:"allocatorStrategy"` // Allocation strategy
-	SortKey               int    `json:"sortKey"`
-	State                 string `json:"state"` // State (Enabled, Disabled)
-	ManagementNetworkUuid string `json:"managementNetworkUuid"`
-	PublicNetworkUuid     string `json:"publicNetworkUuid"`
-	ZoneUuid              string `json:"zoneUuid"`
-	ImageUuid             string `json:"imageUuid"`
-	IsDefault             bool   `json:"isDefault"`
-	ReservedMemorySize    string `json:"reservedMemorySize"`
+	ManagementNetworkUuid string `json:"managementNetworkUuid,omitempty"`
+	PublicNetworkUuid string `json:"publicNetworkUuid,omitempty"`
+	ZoneUuid string `json:"zoneUuid,omitempty"`
+	IsDefault bool `json:"isDefault,omitempty"`
+	ImageUuid string `json:"imageUuid,omitempty"`
+	Description string `json:"description,omitempty"`
+	CpuNum int `json:"cpuNum,omitempty"`
+	CpuSpeed int `json:"cpuSpeed,omitempty"`
+	MemorySize int64 `json:"memorySize,omitempty"`
+	ReservedMemorySize int64 `json:"reservedMemorySize,omitempty"`
+	Type string `json:"type,omitempty"`
+	AllocatorStrategy string `json:"allocatorStrategy,omitempty"`
+	SortKey int `json:"sortKey,omitempty"`
+	State string `json:"state,omitempty"`
 }
+
+// QueryVirtualRouterOfferingView QueryVirtualRouterOffering
+type QueryVirtualRouterOfferingView struct {
+	Inventories []VirtualRouterOfferingInventoryView `json:"inventories,omitempty"`
+}
+
+// CreateInstanceOfferingEventView CreateInstanceOfferingEvent
+type CreateInstanceOfferingEventView struct {
+	Inventory InstanceOfferingInventoryView `json:"inventory,omitempty"`
+}
+
+// UpdateInstanceOfferingEventView UpdateInstanceOfferingEvent
+type UpdateInstanceOfferingEventView struct {
+	Inventory InstanceOfferingInventoryView `json:"inventory,omitempty"`
+}
+

@@ -2,19 +2,45 @@
 
 package param
 
-type CreateDiskOfferingParam struct {
-	BaseParam
-	Params CreateDiskOfferingDetailParam `json:"params"`
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// DeleteDiskOfferingParamDetail DeleteDiskOffering detail param
+type DeleteDiskOfferingParamDetail struct {
+	DeleteMode *string `json:"deleteMode,omitempty"`
 }
 
-type CreateDiskOfferingDetailParam struct {
-	Name              string   `json:"name" validate:"required"`     // Resource name
-	Description       *string  `json:"description"`                  // Detailed description of the resource
-	DiskSize          int64    `json:"diskSize" validate:"required"` // disk size
-	AllocatorStrategy *string  `json:"allocatorStrategy"`            // Allocation strategy
-	SortKey           *int     `json:"sortKey"`                      // Sort key
-	Type              *string  `json:"type"`                         // Type
-	ResourceUuid      *string  `json:"resourceUuid"`                 // Resource UUID
-	SystemTags        []string `json:"systemTags"`
-	UserTags          []string `json:"userTags"`
+// DeleteDiskOfferingParam DeleteDiskOffering request param
+type DeleteDiskOfferingParam struct {
+	BaseParam
+	Params DeleteDiskOfferingParamDetail `json:"deleteDiskOffering"`
+}
+// UpdateDiskOfferingParamDetail UpdateDiskOffering detail param
+type UpdateDiskOfferingParamDetail struct {
+	Name string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+// UpdateDiskOfferingParam UpdateDiskOffering request param
+type UpdateDiskOfferingParam struct {
+	BaseParam
+	Params UpdateDiskOfferingParamDetail `json:"updateDiskOffering"`
+}
+// CreateDiskOfferingParamDetail CreateDiskOffering detail param
+type CreateDiskOfferingParamDetail struct {
+	Name string `json:"name" validate:"required"`
+	Description *string `json:"description,omitempty"`
+	DiskSize int64 `json:"diskSize" validate:"required"`
+	SortKey int `json:"sortKey,omitempty"`
+	AllocationStrategy *string `json:"allocationStrategy,omitempty"`
+	Type *string `json:"type,omitempty"`
+	ResourceUuid *string `json:"resourceUuid,omitempty"`
+	TagUuids []string `json:"tagUuids,omitempty"`
+}
+
+// CreateDiskOfferingParam CreateDiskOffering request param
+type CreateDiskOfferingParam struct {
+	BaseParam
+	Params CreateDiskOfferingParamDetail `json:"params"`
 }

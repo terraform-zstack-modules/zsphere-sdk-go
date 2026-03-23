@@ -2,37 +2,45 @@
 
 package param
 
-type LongJobState string
+import "time"
 
-const (
-	Waiting   LongJobState = "Waiting"
-	Suspended LongJobState = "Suspended"
-	Running   LongJobState = "Running"
-	Succeeded LongJobState = "Succeeded"
-	Canceling LongJobState = "Canceling"
-	Canceled  LongJobState = "Canceled"
-	Failed    LongJobState = "Failed"
-)
+var _ = time.Now() // avoid unused import
 
-type SubmitLongJobParam struct {
+// CleanLongJobParamDetail CleanLongJob detail param
+type CleanLongJobParamDetail struct {
+}
+
+// CleanLongJobParam CleanLongJob request param
+type CleanLongJobParam struct {
 	BaseParam
-	Params SubmitLongJobDetailParam `json:"params"`
+	Params CleanLongJobParamDetail `json:"cleanLongJob"`
 }
-type SubmitLongJobDetailParam struct {
-	Name               *string  `json:"name"`
-	Description        *string  `json:"description"`
-	JobName            string   `json:"jobName" validate:"required"`
-	JobData            string   `json:"jobData" validate:"required"`
-	ResourceUuid       *string  `json:"resourceUuid" `
-	TargetResourceUuid *string  `json:"targetResourceUuid" `
-	TagUuids           []string `json:"tagUuids" `
+// ResumeLongJobParamDetail ResumeLongJob detail param
+type ResumeLongJobParamDetail struct {
 }
 
+// ResumeLongJobParam ResumeLongJob request param
+type ResumeLongJobParam struct {
+	BaseParam
+	Params ResumeLongJobParamDetail `json:"resumeLongJob"`
+}
+// DeleteLongJobParamDetail DeleteLongJob detail param
+type DeleteLongJobParamDetail struct {
+}
+
+// DeleteLongJobParam DeleteLongJob request param
+type DeleteLongJobParam struct {
+	BaseParam
+	Params DeleteLongJobParamDetail `json:"deleteLongJob"`
+}
+// UpdateLongJobParamDetail UpdateLongJob detail param
+type UpdateLongJobParamDetail struct {
+	Name string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+// UpdateLongJobParam UpdateLongJob request param
 type UpdateLongJobParam struct {
 	BaseParam
-	UpdateLongJob UpdateLongJobDetailParam `json:"updateLongJob"`
-}
-type UpdateLongJobDetailParam struct {
-	Name        *string `json:"name"`
-	Description *string `json:"description"`
+	Params UpdateLongJobParamDetail `json:"updateLongJob"`
 }
