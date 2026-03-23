@@ -2,35 +2,38 @@
 
 package param
 
-type ChangeHostStateParam struct {
-	BaseParam
-	ChangeHostState ChangeHostStateDetailParam `json:"changeHostState"`
-}
-type ChangeHostStateDetailParam struct {
-	StateEvent StateEvent `json:"stateEvent"` //  enable disable maintain
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// UpdateHostParamDetail UpdateHost detail param
+type UpdateHostParamDetail struct {
+	Name string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	ManagementIp *string `json:"managementIp,omitempty"`
 }
 
-type AddKVMHostParam struct {
-	BaseParam
-	Params AddKVMHostDetailParam `json:"params"`
-}
-
-type AddKVMHostDetailParam struct {
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	SshPort      int    `json:"sshPort"`
-	Name         string `json:"name"`
-	ManagementIp string `json:"managementIp"`
-	ClusterUuid  string `json:"clusterUuid"`
-}
-
+// UpdateHostParam UpdateHost request param
 type UpdateHostParam struct {
 	BaseParam
-	UpdateHost UpdateHostDetailParam `json:"updateHost"`
+	Params UpdateHostParamDetail `json:"updateHost"`
+}
+// ReconnectHostParamDetail ReconnectHost detail param
+type ReconnectHostParamDetail struct {
 }
 
-type UpdateHostDetailParam struct {
-	Name         *string `json:"name"`
-	Description  *string `json:"description"`
-	ManagementIp *string `json:"managementIp"`
+// ReconnectHostParam ReconnectHost request param
+type ReconnectHostParam struct {
+	BaseParam
+	Params ReconnectHostParamDetail `json:"reconnectHost"`
+}
+// DeleteHostParamDetail DeleteHost detail param
+type DeleteHostParamDetail struct {
+	DeleteMode *string `json:"deleteMode,omitempty"`
+}
+
+// DeleteHostParam DeleteHost request param
+type DeleteHostParam struct {
+	BaseParam
+	Params DeleteHostParamDetail `json:"deleteHost"`
 }

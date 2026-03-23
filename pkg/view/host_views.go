@@ -2,53 +2,94 @@
 
 package view
 
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// HostInventoryView Host
 type HostInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-	Architecture            string `json:"architecture"` // Physical machine architecture
-	ZoneUuid                string `json:"zoneUuid"`     // Zone UUID
-	ClusterUuid             string `json:"clusterUuid"`  // Cluster UUID
-	ManagementIp            string `json:"managementIp"` // Management IP
-	HypervisorType          string `json:"hypervisorType"`
-	State                   string `json:"state"`  // Physical machine state, including Enabled, Disabled, PreMaintenance, Maintenance
-	Status                  string `json:"status"` // Connecting, Connected, Disconnected
-	TotalCpuCapacity        int64  `json:"totalCpuCapacity"`
-	AvailableCpuCapacity    int64  `json:"availableCpuCapacity"`
-	CpuSockets              int    `json:"cpuSockets"`
-	TotalMemoryCapacity     int64  `json:"totalMemoryCapacity"`
-	AvailableMemoryCapacity int64  `json:"availableMemoryCapacity"`
-	CpuNum                  int    `json:"cpuNum"`
-	Username                string `json:"username"`
-	SshPort                 int    `json:"sshPort"`
+	ZoneUuid string `json:"zoneUuid,omitempty"`
+	ClusterUuid string `json:"clusterUuid,omitempty"`
+	Description string `json:"description,omitempty"`
+	ManagementIp string `json:"managementIp,omitempty"`
+	HypervisorType string `json:"hypervisorType,omitempty"`
+	State string `json:"state,omitempty"`
+	Status string `json:"status,omitempty"`
+	TotalCpuCapacity int64 `json:"totalCpuCapacity,omitempty"`
+	AvailableCpuCapacity int64 `json:"availableCpuCapacity,omitempty"`
+	CpuSockets int `json:"cpuSockets,omitempty"`
+	TotalMemoryCapacity int64 `json:"totalMemoryCapacity,omitempty"`
+	AvailableMemoryCapacity int64 `json:"availableMemoryCapacity,omitempty"`
+	CpuNum int `json:"cpuNum,omitempty"`
+	IpmiAddress string `json:"ipmiAddress,omitempty"`
+	IpmiUsername string `json:"ipmiUsername,omitempty"`
+	IpmiPort int `json:"ipmiPort,omitempty"`
+	IpmiPowerStatus string `json:"ipmiPowerStatus,omitempty"`
+	CpuStatus string `json:"cpuStatus,omitempty"`
+	MemoryStatus string `json:"memoryStatus,omitempty"`
+	DiskStatus string `json:"diskStatus,omitempty"`
+	NicStatus string `json:"nicStatus,omitempty"`
+	GpuStatus string `json:"gpuStatus,omitempty"`
+	PowerSupplyStatus string `json:"powerSupplyStatus,omitempty"`
+	FanStatus string `json:"fanStatus,omitempty"`
+	RaidStatus string `json:"raidStatus,omitempty"`
+	TemperatureStatus string `json:"temperatureStatus,omitempty"`
+	Architecture string `json:"architecture,omitempty"`
+	Nqn string `json:"nqn,omitempty"`
+	Hostname string `json:"hostname,omitempty"`
 }
 
-type HostNetworkBondingInventoryView struct {
-	BaseInfoView
-	BaseTimeView
-	HostUuid    string `json:"hostUuid"`    // Physical machine UUID
-	BondingName string `json:"bondingName"` // Bond name
-
-	Mode            string                              `json:"mode"`            // Bond mode
-	XmitHashPolicy  string                              `json:"xmitHashPolicy"`  // Hash policy
-	MiiStatus       string                              `json:"miiStatus"`       // MII status
-	Mac             string                              `json:"mac"`             // MAC address
-	IpAddresses     []string                            `json:"ipAddresses"`     // IP addresses
-	Miimon          int64                               `json:"miimon"`          // MII monitoring interval
-	AllSlavesActive bool                                `json:"allSlavesActive"` // Whether all slaves are active
-	Slaves          []HostNetworkInterfaceInventoryView `json:"slaves"`          // Slaves list
+// UpdateHostEventView UpdateHostEvent
+type UpdateHostEventView struct {
+	Inventory HostInventoryView `json:"inventory,omitempty"`
 }
 
-type HostNetworkInterfaceInventoryView struct {
-	BaseTimeView
-	UUID             string   `json:"uuid"`             // Network interface UUID
-	HostUuid         string   `json:"hostUuid"`         // Physical machine UUID
-	BondingUuid      string   `json:"bondingUuid"`      // Bond UUID
-	InterfaceName    string   `json:"interfaceName"`    // Network interface name
-	InterfaceType    string   `json:"interfaceType"`    // Network interface application status, including nomaster, bridgeSlave, bondSlave
-	Speed            int64    `json:"speed"`            // Network interface speed
-	SlaveActive      bool     `json:"slaveActive"`      // Bond link status
-	CarrierActive    bool     `json:"carrierActive"`    // Physical link status
-	IpAddresses      []string `json:"ipAddresses"`      // IP addresses
-	Mac              string   `json:"mac"`              // MAC address
-	PciDeviceAddress string   `json:"pciDeviceAddress"` // PCI address
+// ChangeHostStateEventView ChangeHostStateEvent
+type ChangeHostStateEventView struct {
+	Inventory HostInventoryView `json:"inventory,omitempty"`
 }
+
+// AddHostEventView AddHostEvent
+type AddHostEventView struct {
+	Inventory HostInventoryView `json:"inventory,omitempty"`
+}
+
+// UpdateHostnameEventView UpdateHostnameEvent
+type UpdateHostnameEventView struct {
+	Inventory HostInventoryView `json:"inventory,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+
+// UpdateHostNqnEventView UpdateHostNqnEvent
+type UpdateHostNqnEventView struct {
+	Inventory HostInventoryView `json:"inventory,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+
+// ReconnectHostEventView ReconnectHostEvent
+type ReconnectHostEventView struct {
+	Inventory HostInventoryView `json:"inventory,omitempty"`
+}
+
+// DeleteHostEventView DeleteHostEvent
+type DeleteHostEventView struct {
+	Success bool `json:"success,omitempty"`
+}
+
+// QueryHostView QueryHost
+type QueryHostView struct {
+	Inventories []HostInventoryView `json:"inventories,omitempty"`
+}
+
+// GetVmMigrationCandidateHostsView GetVmMigrationCandidateHosts
+type GetVmMigrationCandidateHostsView struct {
+	Inventories []HostInventoryView `json:"inventories,omitempty"`
+}
+
+// GetHostCandidatesForVmMigrationView GetHostCandidatesForVmMigration
+type GetHostCandidatesForVmMigrationView struct {
+	Inventories []HostInventoryView `json:"inventories,omitempty"`
+}
+

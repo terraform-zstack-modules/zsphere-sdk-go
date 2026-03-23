@@ -3,38 +3,55 @@
 package client
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/param"
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/view"
 )
 
-// CreateDiskOffering creates a cloud host specification
-func (cli *ZSClient) CreateDiskOffering(params *param.CreateDiskOfferingParam) (*view.DiskOfferingInventoryView, error) {
+var _ = param.BaseParam{} // avoid unused import
+var _ view.MapView // avoid unused import
+
+// DeleteDiskOffering deletes DiskOffering
+func (cli *ZSClient) DeleteDiskOffering(ctx context.Context, uuid string, deleteMode param.DeleteMode) error {
+	return cli.Delete(ctx, "v1/disk-offerings", uuid, string(deleteMode))
+}
+// UpdateDiskOffering updates DiskOffering
+func (cli *ZSClient) UpdateDiskOffering(ctx context.Context, uuid string, params param.UpdateDiskOfferingParam) (*view.DiskOfferingInventoryView, error) {
+	resp := view.DiskOfferingInventoryView{}
+	if err := cli.PutWithSpec(ctx, "v1/disk-offerings", uuid, "actions", "inventory", map[string]interface{}{
+		"updateDiskOffering": params.Params,
+	}, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+// QueryDiskOffering queries DiskOffering list
+func (cli *ZSClient) QueryDiskOffering(ctx context.Context, params *param.QueryParam) ([]view.DiskOfferingInventoryView, error) {
+	var resp []view.DiskOfferingInventoryView
+	return resp, cli.List(ctx, "v1/disk-offerings", params, &resp)
+}
+
+func (cli *ZSClient) GetDiskOffering(ctx context.Context, uuid string) (*view.DiskOfferingInventoryView, error) {
 	var resp view.DiskOfferingInventoryView
-	if err := cli.Post("v1/disk-offerings", params, &resp); err != nil {
+	if err := cli.Get(ctx, "v1/disk-offerings", uuid, nil, &resp); err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
 
-// DeleteDiskOffering deletes a cloud host specification
-func (cli *ZSClient) DeleteDiskOffering(uuid string, deleteMode param.DeleteMode) error {
-	return cli.Delete("v1/disk-offerings", uuid, string(deleteMode))
+// PageDiskOffering Pagination
+func (cli *ZSClient) PageDiskOffering(ctx context.Context, params *param.QueryParam) ([]view.DiskOfferingInventoryView, int, error) {
+	var diskOfferings []view.DiskOfferingInventoryView
+	total, err := cli.Page(ctx, "v1/disk-offerings", params, &diskOfferings)
+	return diskOfferings, total, err
 }
-
-// GetDiskOffering Get Disk Offering
-func (cli *ZSClient) GetDiskOffering(uuid string) (*view.DiskOfferingInventoryView, error) {
-	offering := view.DiskOfferingInventoryView{}
-	return &offering, cli.Get("v1/disk-offerings", uuid, nil, &offering)
-}
-
-// QueryDiskOffering
-func (cli *ZSClient) QueryDiskOffering(params param.QueryParam) ([]view.DiskOfferingInventoryView, error) {
-	var offering []view.DiskOfferingInventoryView
-	return offering, cli.List("v1/disk-offerings", &params, &offering)
-}
-
-// UpdateImage Edit Image
-func (cli *ZSClient) UpdateDiskOffering(uuid string, params param.UpdateImageParam) (view.ImageView, error) {
-	image := view.ImageView{}
-	return image, cli.Put("v1/images", uuid, params, &image)
+// CreateDiskOffering creates DiskOffering
+func (cli *ZSClient) CreateDiskOffering(ctx context.Context, params param.CreateDiskOfferingParam) (*view.DiskOfferingInventoryView, error) {
+	resp := view.DiskOfferingInventoryView{}
+	if err := cli.PostWithRespKey(ctx, fmt.Sprintf("v1/disk-offerings"), "inventory", params, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }

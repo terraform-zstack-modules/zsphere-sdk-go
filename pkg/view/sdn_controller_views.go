@@ -1,37 +1,41 @@
 // Copyright (c) ZStack.io, Inc.
-// SPDX-License-Identifier: MPL-2.0
 
 package view
 
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// SdnControllerInventoryView SdnController
 type SdnControllerInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	Ip         string       `json:"ip"`
-	Status     string       `json:"status"`
-	UserName   string       `json:"username"`
-	Passwordd  string       `json:"password"`
-	VendorType string       `json:"verdorType"`
-	HostRefs   []HostRefs   `json:"hostRefs"`
-	VniRanges  []VniRanges  `json:"vniRanges"`
-	VxlanPools []VxlanPools `json:"vxlanPools"`
+	VendorType string `json:"vendorType,omitempty"`
+	Description string `json:"description,omitempty"`
+	Ip string `json:"ip,omitempty"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
+	VniRanges []SdnVniRangeView `json:"vniRanges,omitempty"`
+	VxlanPools []HardwareL2VxlanNetworkPoolInventoryView `json:"vxlanPools,omitempty"`
 }
 
-type HostRefs struct {
-	SdnControllerUuid string `json:"sdnControllerUuid"`
-	HostUuid          string `json:"hostUuid"`
-	VSwitchType       string `json:"vSwitchType"`
-	VtepIp            string `json:"vtepIp"`
-	NicPciAddresses   string `json:"nicPciAddresses"`
-	NicDrivers        string `json:"nicDrivers"`
-	Netmask           string `json:"netmask"`
-	BondMode          string `json:"bondMode"`
-	LacpMode          string `json:"lacpMode"`
+// RemoveSdnControllerEventView RemoveSdnControllerEvent
+type RemoveSdnControllerEventView struct {
+	Success bool `json:"success,omitempty"`
 }
 
-type VniRanges struct {
-	StartVni string `json:"startVni"`
-	EndVni   string `json:"endVni"`
+// AddSdnControllerEventView AddSdnControllerEvent
+type AddSdnControllerEventView struct {
+	Inventory SdnControllerInventoryView `json:"inventory,omitempty"`
 }
 
-type VxlanPools struct{}
+// UpdateSdnControllerEventView UpdateSdnControllerEvent
+type UpdateSdnControllerEventView struct {
+	Inventory SdnControllerInventoryView `json:"inventory,omitempty"`
+}
+
+// QuerySdnControllerView QuerySdnController
+type QuerySdnControllerView struct {
+	Inventories []SdnControllerInventoryView `json:"inventories,omitempty"`
+}
+

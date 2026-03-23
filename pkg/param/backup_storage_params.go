@@ -2,65 +2,37 @@
 
 package param
 
-type BackupStorageType string
+import "time"
 
-const (
-	ImageStoreBackupStorage BackupStorageType = "ImageStoreBackupStorage"
-)
+var _ = time.Now() // avoid unused import
 
-type ExportImageFromBackupStorageParam struct {
+// UpdateBackupStorageParamDetail UpdateBackupStorage detail param
+type UpdateBackupStorageParamDetail struct {
+	Name string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+// UpdateBackupStorageParam UpdateBackupStorage request param
+type UpdateBackupStorageParam struct {
 	BaseParam
-	BackupStorageUuid            string                                  `json:"backupStorageUuid"`
-	ExportImageFromBackupStorage ExportImageFromBackupStorageDetailParam `json:"exportImageFromBackupStorage"`
+	Params UpdateBackupStorageParamDetail `json:"updateBackupStorage"`
+}
+// DeleteBackupStorageParamDetail DeleteBackupStorage detail param
+type DeleteBackupStorageParamDetail struct {
+	DeleteMode *string `json:"deleteMode,omitempty"`
 }
 
-type ExportImageFromBackupStorageDetailParam struct {
-	ImageUuid string `json:"imageUuid"`
-}
-
-type DeleteExportedImageFromBackupStorageParam struct {
-	BackupStorageUuid string `json:"backupStorageUuid"`
-	ImageUuid         string `json:"imageUuid"`
-}
-
-type AddImageStoreBackupStorageParam struct {
+// DeleteBackupStorageParam DeleteBackupStorage request param
+type DeleteBackupStorageParam struct {
 	BaseParam
-	Params AddImageStoreBackupStorageDetailParam `json:"params"`
+	Params DeleteBackupStorageParamDetail `json:"deleteBackupStorage"`
+}
+// ReconnectBackupStorageParamDetail ReconnectBackupStorage detail param
+type ReconnectBackupStorageParamDetail struct {
 }
 
-type AddImageStoreBackupStorageDetailParam struct {
-	Hostname     string            `json:"hostname"`
-	Username     string            `json:"username"`
-	Password     string            `json:"password"`
-	SshPort      int               `json:"sshPort"`
-	Url          string            `json:"url"`
-	Name         string            `json:"name"`
-	Description  string            `json:"description"`
-	Type         BackupStorageType `json:"type"`
-	ImportImages bool              `json:"importImages"`
-	ResourceUuid string            `json:"resourceUuid"`
-}
-
-type UpdateImageStoreBackupStorageParam struct {
+// ReconnectBackupStorageParam ReconnectBackupStorage request param
+type ReconnectBackupStorageParam struct {
 	BaseParam
-	UpdateImageStoreBackupStorage UpdateImageStoreBackupStorageDetailParam `json:"updateImageStoreBackupStorage"`
-}
-
-type UpdateImageStoreBackupStorageDetailParam struct {
-	UUID        string  `json:"uuid"`
-	Username    *string `json:"username"`
-	Password    *string `json:"password"`
-	Hostname    *string `json:"hostname"`
-	SshPort     *int    `json:"sshPort"`
-	Name        *string `json:"name"`
-	Description *string `json:"description"`
-}
-
-type ChangeBackupStorageStateParam struct {
-	BaseParam
-	ChangeBackupStorageState ChangeBackupStorageStateDetailParam `json:"changeBackupStorageState"`
-}
-
-type ChangeBackupStorageStateDetailParam struct {
-	StateEvent StateEvent `json:"stateEvent"`
+	Params ReconnectBackupStorageParamDetail `json:"reconnectBackupStorage"`
 }

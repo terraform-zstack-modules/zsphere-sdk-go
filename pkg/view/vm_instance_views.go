@@ -2,99 +2,247 @@
 
 package view
 
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// VmInstanceInventoryView VmInstance
 type VmInstanceInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	ZoneUUID             string               `json:"zoneUuid"`             // Zone UUID
-	ClusterUUID          string               `json:"clusterUuid"`          // Cluster UUID
-	ImageUUID            string               `json:"imageUuid"`            // Image UUID
-	HostUUID             string               `json:"hostUuid"`             // Physical machine UUID
-	LastHostUUID         string               `json:"lastHostUuid"`         // Physical machine UUID where the cloud host last ran
-	InstanceOfferingUUID string               `json:"instanceOfferingUuid"` // Compute specification UUID
-	RootVolumeUUID       string               `json:"rootVolumeUuid"`       // Root cloud disk UUID
-	Platform             string               `json:"platform"`             // Cloud host running platform
-	Architecture         string               `json:"architecture"`         // Architecture type
-	GuestOsType          string               `json:"guestOsType" `         // Guest OS type corresponding to the image
-	DefaultL3NetworkUUID string               `json:"defaultL3NetworkUuid"` // Default layer 3 network UUID
-	Type                 string               `json:"type"`                 // Cloud host type
-	HypervisorType       string               `json:"hypervisorType"`       // Hypervisor type of the cloud host
-	MemorySize           int64                `json:"memorySize"`           // Memory size
-	CPUNum               int                  `json:"cpuNum"`               // Number of CPUs
-	CPUSpeed             int64                `json:"cpuSpeed"`             // CPU frequency
-	AllocatorStrategy    string               `json:"allocatorStrategy"`    // Allocation strategy
-	State                string               `json:"state"`                // Availability status of the cloud host
-	VMNics               []VmNicInventoryView `json:"vmNics"`               // All NIC information
-	AllVolumes           []VolumeView         `json:"allVolumes"`           // All volumes
-	VmCdRoms             []VmCdRom            `json:"vmCdRoms"`             // CD-ROMs
+	Description string `json:"description,omitempty"`
+	ZoneUuid string `json:"zoneUuid,omitempty"`
+	ClusterUuid string `json:"clusterUuid,omitempty"`
+	ImageUuid string `json:"imageUuid,omitempty"`
+	HostUuid string `json:"hostUuid,omitempty"`
+	LastHostUuid string `json:"lastHostUuid,omitempty"`
+	InstanceOfferingUuid string `json:"instanceOfferingUuid,omitempty"`
+	RootVolumeUuid string `json:"rootVolumeUuid,omitempty"`
+	Platform string `json:"platform,omitempty"`
+	Architecture string `json:"architecture,omitempty"`
+	DefaultL3NetworkUuid string `json:"defaultL3NetworkUuid,omitempty"`
+	Type string `json:"type,omitempty"`
+	HypervisorType string `json:"hypervisorType,omitempty"`
+	MemorySize int64 `json:"memorySize,omitempty"`
+	ReservedMemorySize int64 `json:"reservedMemorySize,omitempty"`
+	CpuNum int `json:"cpuNum,omitempty"`
+	CpuSpeed int64 `json:"cpuSpeed,omitempty"`
+	AllocatorStrategy string `json:"allocatorStrategy,omitempty"`
+	State string `json:"state,omitempty"`
+	VmNics []VmNicInventoryView `json:"vmNics,omitempty"`
+	AllVolumes []VolumeInventoryView `json:"allVolumes,omitempty"`
+	VmCdRoms []VmCdRomInventoryView `json:"vmCdRoms,omitempty"`
+	GuestOsType string `json:"guestOsType,omitempty"`
 }
 
-type CloneVmInstanceResult struct {
-	NumberOfClonedVm int                        `json:"numberOfClonedVm"`
-	Inventories      []CloneVmInstanceInventory `json:"inventories"`
+// CloneVmInstanceEventView CloneVmInstanceEvent
+type CloneVmInstanceEventView struct {
+	Result CloneVmInstanceResultsView `json:"result,omitempty"`
+	Success bool `json:"success,omitempty"`
 }
 
-type CloneVmInstanceInventory struct {
-	Error     *ErrorCodeView          `json:"error"`
-	Inventory VmInstanceInventoryView `json:"inventory"`
+// CreateVmFromVmBackupEventView CreateVmFromVmBackupEvent
+type CreateVmFromVmBackupEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
 
-type VmCdRom struct {
-	BaseInfoView
-	BaseTimeView
-
-	DeviceId       int    `json:"deviceId"`       // Device ID
-	VmInstanceUuid string `json:"vmInstanceUuid"` // VM instance UUID
+// SetVmClockTrackEventView SetVmClockTrackEvent
+type SetVmClockTrackEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
 
-type VMConsoleAddressView struct {
-	HostIp      string      `json:"hostIp" bson:"hostIp"`           // IP of the physical machine running the cloud host
-	Port        string      `json:"port" bson:"port"`               // Console port of the cloud host
-	Protocol    string      `json:"protocol" bson:"protocol"`       // Console protocol of the cloud host, e.g., vnc or spice or vncAndSpice
-	Success     bool        `json:"success" bson:"success"`         // Whether the operation was successful
-	VdiPortInfo VdiPortInfo `json:"vdiPortInfo" bson:"vdiPortInfo"` // Port group
+// StopVmInstanceEventView StopVmInstanceEvent
+type StopVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
 
-type VdiPortInfo struct {
-	VncPort      int `json:"vncPort" bson:"vncPort"`           // VNC port number
-	SpicePort    int `json:"spicePort" bson:"spicePort"`       // SPICE port number
-	SpiceTlsPort int `json:"spiceTlsPort" bson:"spiceTlsPort"` // SPICE TLS port number, used when SPICE is encrypted with TLS
+// AttachL3NetworkToVmEventView AttachL3NetworkToVmEvent
+type AttachL3NetworkToVmEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
 
-type GetVmConsolePasswordView struct {
-	ConsolePassword string `json:"consolePassword" bson:"consolePassword"` // Password
+// ResumeVmInstanceEventView ResumeVmInstanceEvent
+type ResumeVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
 
-type VmGuestToolsInfoView struct {
-	Version string `json:"version"`
-	Status  string `json:"status"`
+// SetVmBootOrderEventView SetVmBootOrderEvent
+type SetVmBootOrderEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
 
-type LatestGuestToolsView struct {
-	BaseInfoView
-	BaseTimeView
-
-	ManagementNodeUuid string      `json:"managementNodeUuid" `
-	AgentType          interface{} `json:"agentType" `
-	HypervisorType     string      `json:"hypervisorType" ` // Hypervisor type
-	Version            interface{} `json:"version" `        // Version
-	Architecture       string      `json:"architecture" `   // Architecture
+// QueryVmInstanceView QueryVmInstance
+type QueryVmInstanceView struct {
+	Inventories []VmInstanceInventoryView `json:"inventories,omitempty"`
 }
 
-type VMQgaView struct {
-	UUID   string `json:"uuid" `
-	Enable bool   `json:"enable" `
+// DetachIsoFromVmInstanceEventView DetachIsoFromVmInstanceEvent
+type DetachIsoFromVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
 
-type VMSshKeyView struct {
-	SshKey string `json:"sshKey" `
+// ExpungeVmInstanceEventView ExpungeVmInstanceEvent
+type ExpungeVmInstanceEventView struct {
+	Success bool `json:"success,omitempty"`
 }
 
-type VMCDRomView struct {
-	BaseInfoView
-	BaseTimeView
-	VmInstanceUuid string  `json:"vmInstanceUuid"`
-	DeviceId       float64 `json:"deviceId"`
-	IsoUuid        string  `json:"isoUuid"`
-	IsoInstallPath string  `json:"isoInstallPath"`
+// ChangeInstanceOfferingEventView ChangeInstanceOfferingEvent
+type ChangeInstanceOfferingEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
 }
+
+// RebootVmInstanceEventView RebootVmInstanceEvent
+type RebootVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// DetachL3NetworkFromVmEventView DetachL3NetworkFromVmEvent
+type DetachL3NetworkFromVmEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// UpdateVmInstanceEventView UpdateVmInstanceEvent
+type UpdateVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// DeleteVmSshKeyEventView DeleteVmSshKeyEvent
+type DeleteVmSshKeyEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+
+// MigrateVmEventView MigrateVmEvent
+type MigrateVmEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// DeleteVmConsolePasswordEventView DeleteVmConsolePasswordEvent
+type DeleteVmConsolePasswordEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+
+// DestroyVmInstanceEventView DestroyVmInstanceEvent
+type DestroyVmInstanceEventView struct {
+	Success bool `json:"success,omitempty"`
+}
+
+// StartVmInstanceEventView StartVmInstanceEvent
+type StartVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// DeleteVmStaticIpEventView DeleteVmStaticIpEvent
+type DeleteVmStaticIpEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+
+// CreateVmInstanceFromVolumeSnapshotEventView CreateVmInstanceFromVolumeSnapshotEvent
+type CreateVmInstanceFromVolumeSnapshotEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// SetVmSshKeyEventView SetVmSshKeyEvent
+type SetVmSshKeyEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// AttachIsoToVmInstanceEventView AttachIsoToVmInstanceEvent
+type AttachIsoToVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// AttachVmNicToVmEventView AttachVmNicToVmEvent
+type AttachVmNicToVmEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateVmFromVolumeBackupEventView CreateVmFromVolumeBackupEvent
+type CreateVmFromVolumeBackupEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// ChangeVmNicStateEventView ChangeVmNicStateEvent
+type ChangeVmNicStateEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// DeleteVmCdRomEventView DeleteVmCdRomEvent
+type DeleteVmCdRomEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+
+// SetVmConsolePasswordEventView SetVmConsolePasswordEvent
+type SetVmConsolePasswordEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateVpcVRouterEventView CreateVpcVRouterEvent
+type CreateVpcVRouterEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateVmInstanceFromVolumeSnapshotGroupEventView CreateVmInstanceFromVolumeSnapshotGroupEvent
+type CreateVmInstanceFromVolumeSnapshotGroupEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateVmInstanceEventView CreateVmInstanceEvent
+type CreateVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// SetVmBootVolumeEventView SetVmBootVolumeEvent
+type SetVmBootVolumeEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// SetVmConsoleModeEventView SetVmConsoleModeEvent
+type SetVmConsoleModeEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// GetDataVolumeAttachableVmView GetDataVolumeAttachableVm
+type GetDataVolumeAttachableVmView struct {
+	Inventories []VmInstanceInventoryView `json:"inventories,omitempty"`
+}
+
+// CreateVmInstanceFromOvfEventView CreateVmInstanceFromOvfEvent
+type CreateVmInstanceFromOvfEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// ChangeVmImageEventView ChangeVmImageEvent
+type ChangeVmImageEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateVmInstanceFromVolumeEventView CreateVmInstanceFromVolumeEvent
+type CreateVmInstanceFromVolumeEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateVmFromCdpBackupEventView CreateVmFromCdpBackupEvent
+type CreateVmFromCdpBackupEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+
+// GetCandidateVMForAttachingAffinityGroupView GetCandidateVMForAttachingAffinityGroup
+type GetCandidateVMForAttachingAffinityGroupView struct {
+	Inventories []VmInstanceInventoryView `json:"inventories,omitempty"`
+	Success bool `json:"success,omitempty"`
+}
+
+// GetCandidateVmForAttachingIsoView GetCandidateVmForAttachingIso
+type GetCandidateVmForAttachingIsoView struct {
+	Inventories []VmInstanceInventoryView `json:"inventories,omitempty"`
+}
+
+// RecoverVmInstanceEventView RecoverVmInstanceEvent
+type RecoverVmInstanceEventView struct {
+	Inventory VmInstanceInventoryView `json:"inventory,omitempty"`
+}
+

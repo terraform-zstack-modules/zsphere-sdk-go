@@ -2,76 +2,142 @@
 
 package view
 
-import "github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/param"
+import "time"
 
-type ImageView struct {
+var _ = time.Now() // avoid unused import
+
+// ImageInventoryView Image
+type ImageInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	State             string                   `json:"state"`       // "state": "Enabled", Image boot state
-	Status            string                   `json:"status"`      // "status": "Ready", Image ready state
-	Size              int64                    `json:"size"`        // Image size
-	ActualSize        int64                    `json:"actualSize"`  // Image actual capacity
-	Md5Sum            string                   `json:"md5Sum"`      // Image md5 value
-	Url               string                   `json:"url"`         // URL of the added image
-	MediaType         string                   `json:"mediaType"`   // Image type
-	GuestOsType       string                   `json:"guestOsType"` // Guest OS type corresponding to the image
-	Type              string                   `json:"type"`
-	Platform          string                   `json:"platform"`     // Image system platform, Linux, Windows, WindowsVirtio, Other, Paravirtualization
-	Architecture      param.Architecture       `json:"architecture"` // x86_64, aarch64, mips64el
-	Format            string                   `json:"format"`       // Image format qcow2
-	System            string                   `json:"system"`       // Whether it is a system image (e.g., cloud router image)
-	Virtio            bool                     `json:"virtio"`
-	BackupStorageRefs []ImageBackupStorageRefs `json:"backupStorageRefs"`
-	SystemTags        []string                 `json:"systemTags"`
+	Description string `json:"description,omitempty"`
+	State string `json:"state,omitempty"`
+	Status string `json:"status,omitempty"`
+	Size int64 `json:"size,omitempty"`
+	ActualSize int64 `json:"actualSize,omitempty"`
+	Md5Sum string `json:"md5Sum,omitempty"`
+	Url string `json:"url,omitempty"`
+	MediaType string `json:"mediaType,omitempty"`
+	GuestOsType string `json:"guestOsType,omitempty"`
+	Type string `json:"type,omitempty"`
+	Platform string `json:"platform,omitempty"`
+	Architecture string `json:"architecture,omitempty"`
+	Format string `json:"format,omitempty"`
+	System bool `json:"system,omitempty"`
+	Virtio bool `json:"virtio,omitempty"`
+	BackupStorageRefs []ImageBackupStorageRefInventoryView `json:"backupStorageRefs,omitempty"`
+	SystemTags []SystemTagInventoryView `json:"systemTags,omitempty"`
 }
 
-type ImageBackupStorageRefs struct {
-	ImageUuid         string `json:"imageUuid"`         // Image UUID
-	BackupStorageUuid string `json:"backupStorageUuid"` // Image storage UUID
-	InstallPath       string `json:"installPath"`       // Installation path
-	ExportUrl         string `json:"exportUrl"`
-	ExportMd5Sum      string `json:"exportMd5Sum"`
-	State             string `json:"state"`      // "status": "Ready"
-	CreateDate        string `json:"createDate"` // Creation time
-	LastOpDate        string `json:"lastOpDate"` // Last modification time
+// GetCandidateIsoForAttachingVmView GetCandidateIsoForAttachingVm
+type GetCandidateIsoForAttachingVmView struct {
+	Inventories []ImageInventoryView `json:"inventories,omitempty"`
 }
 
-type GuestOsTypeView struct {
-	Platform string         `json:"platform"`
-	Children []PlatformView `json:"children"`
+// UpdateImageEventView UpdateImageEvent
+type UpdateImageEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
 }
 
-type PlatformView struct {
-	GuestName string        `json:"guestName"`
-	Children  []ReleaseView `json:"children"`
+// GetImageCandidatesForVmToChangeView GetImageCandidatesForVmToChange
+type GetImageCandidatesForVmToChangeView struct {
+	Inventories []ImageInventoryView `json:"inventories,omitempty"`
 }
 
-type ReleaseView struct {
-	Uuid      string `json:"uuid"`
-	Platform  string `json:"platform"`
-	Name      string `json:"name"`
-	OsRelease string `json:"osRelease"`
-	Version   string `json:"version"`
+// ChangeImageStateEventView ChangeImageStateEvent
+type ChangeImageStateEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
 }
 
-type GetImageQgaView struct {
-	Enable bool `json:"enable"`
+// AddImageEventView AddImageEvent
+type AddImageEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
 }
 
-type GetUploadImageJobDetailsResponse struct {
-	Success            bool               `json:"success"`
-	ExistingJobDetails ExistingJobDetails `json:"existingJobDetails"`
+// QueryImageView QueryImage
+type QueryImageView struct {
+	Inventories []ImageInventoryView `json:"inventories,omitempty"`
 }
 
-type ExistingJobDetails struct {
-	LongJobUuid    string `json:"longJobUuid"`
-	LongJobState   string `json:"longJobState"`
-	ImageUuid      string `json:"imageUuid"`
-	ImageUploadUrl string `json:"imageUploadUrl"`
-	Offset         int64  `json:"offset"`
+// CreateDataVolumeTemplateFromVolumeEventView CreateDataVolumeTemplateFromVolumeEvent
+type CreateDataVolumeTemplateFromVolumeEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
 }
 
-type GuestOsNameView struct {
-	Name string `json:"name"` // Operating system name
+// CreateRootVolumeTemplateFromVolumeBackupEventView CreateRootVolumeTemplateFromVolumeBackupEvent
+type CreateRootVolumeTemplateFromVolumeBackupEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
 }
+
+// CreateRootVolumeTemplateFromVolumeSnapshotEventView CreateRootVolumeTemplateFromVolumeSnapshotEvent
+type CreateRootVolumeTemplateFromVolumeSnapshotEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+	Failures []FailureView `json:"failures,omitempty"`
+}
+
+// SyncImageEventView SyncImageEvent
+type SyncImageEventView struct {
+	Success bool `json:"success,omitempty"`
+}
+
+// RecoveryImageFromImageStoreBackupStorageEventView RecoveryImageFromImageStoreBackupStorageEvent
+type RecoveryImageFromImageStoreBackupStorageEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+
+// GetCandidateImagesForCreatingVmView GetCandidateImagesForCreatingVm
+type GetCandidateImagesForCreatingVmView struct {
+	Inventories []ImageInventoryView `json:"inventories,omitempty"`
+}
+
+// ExpungeImageEventView ExpungeImageEvent
+type ExpungeImageEventView struct {
+	Success bool `json:"success,omitempty"`
+}
+
+// SyncImageFromImageStoreBackupStorageEventView SyncImageFromImageStoreBackupStorageEvent
+type SyncImageFromImageStoreBackupStorageEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+
+// BackupStorageMigrateImageEventView BackupStorageMigrateImageEvent
+type BackupStorageMigrateImageEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+
+// RecoverImageEventView RecoverImageEvent
+type RecoverImageEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+
+// CalculateImageHashEventView CalculateImageHashEvent
+type CalculateImageHashEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateDataVolumeTemplateFromVolumeSnapshotEventView CreateDataVolumeTemplateFromVolumeSnapshotEvent
+type CreateDataVolumeTemplateFromVolumeSnapshotEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+	Failures []FailureView `json:"failures,omitempty"`
+}
+
+// DeleteImageEventView DeleteImageEvent
+type DeleteImageEventView struct {
+	Success bool `json:"success,omitempty"`
+}
+
+// CreateRootVolumeTemplateFromRootVolumeEventView CreateRootVolumeTemplateFromRootVolumeEvent
+type CreateRootVolumeTemplateFromRootVolumeEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateDataVolumeTemplateFromVolumeBackupEventView CreateDataVolumeTemplateFromVolumeBackupEvent
+type CreateDataVolumeTemplateFromVolumeBackupEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+
+// SyncImageSizeEventView SyncImageSizeEvent
+type SyncImageSizeEventView struct {
+	Inventory ImageInventoryView `json:"inventory,omitempty"`
+}
+

@@ -4,29 +4,38 @@ package view
 
 import "time"
 
+// BaseInfoView holds common identity fields
 type BaseInfoView struct {
-	UUID        string `json:"uuid"`        // Resource UUID, unique identifier for the resource
-	Name        string `json:"name"`        // Resource name
-	Description string `json:"description"` // Detailed description of the resource
+	UUID string `json:"uuid"`           // Unique resource identifier
+	Name string `json:"name,omitempty"` // Resource name
 }
 
 type BaseTimeView struct {
-	CreateDate time.Time `json:"createDate"` // Creation time
-	LastOpDate time.Time `json:"lastOpDate"` // Last modification time
+	CreateDate time.Time `json:"createDate,omitempty"` // Creation time
+	LastOpDate time.Time `json:"lastOpDate,omitempty"` // Last operation time
 }
 
-type BaseExecTimeView struct {
-	StartTime time.Time `json:"startTime"` // Start time
-	EndTime   time.Time `json:"endTime"`   // End time
-}
+// Generic wrapper types for APIs that return simple data types
 
-type ErrorCodeView struct {
-	Code        string                 `json:"code"`        // Error code number, global unique identifier for the error, e.g., SYS.1000, HOST.1001
-	Description string                 `json:"description"` // Brief description of the error
-	Details     string                 `json:"details"`     // Detailed information about the error
-	Elaboration string                 `json:"elaboration"` // Reserved field, defaults to null
-	Location    string                 `json:"location"`
-	Cost        string                 `json:"cost"`
-	Opaque      map[string]interface{} `json:"opaque"` // Reserved field, defaults to null
-	Cause       *ErrorCodeView         `json:"cause"`  // Root error, the source error that caused the current error, null if there is no source error
+// MapView wraps map return values
+type MapView map[string]interface{}
+
+// ListView wraps list/array return values
+type ListView []interface{}
+
+// StringView wraps string return values
+type StringView string
+
+// BooleanView wraps boolean return values
+type BooleanView bool
+
+// IntView wraps integer return values
+type IntView int
+
+// LongView wraps long integer return values
+type LongView int64
+
+// SuccessView represents successful operation with no data return
+type SuccessView struct {
+	Success bool `json:"success"`
 }

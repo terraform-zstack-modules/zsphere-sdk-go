@@ -4,50 +4,110 @@ package view
 
 import "time"
 
-type VolumeView struct {
+var _ = time.Now() // avoid unused import
+
+// VolumeInventoryView Volume
+type VolumeInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	PrimaryStorageUUID string    `json:"primaryStorageUuid"` // Primary storage UUID
-	VMInstanceUUID     string    `json:"vmInstanceUuid"`     // Cloud VM UUID
-	LastVmInstanceUuid string    `json:"lastVmInstanceUuid"` // Last cloud VM UUID
-	DiskOfferingUUID   string    `json:"diskOfferingUuid"`   // Cloud disk specification UUID
-	RootImageUUID      string    `json:"rootImageUuid"`
-	InstallPath        string    `json:"installPath"`
-	Type               string    `json:"type"`
-	Format             string    `json:"format"`
-	Size               int       `json:"size"`
-	ActualSize         int       `json:"actualSize"`
-	DeviceID           float32   `json:"deviceId"`
-	State              string    `json:"state"`
-	Status             string    `json:"status"`
-	IsShareable        bool      `json:"isShareable"`
-	LastDetachDate     time.Time `json:"lastDetachDate"` // Last detach time
+	Description string `json:"description,omitempty"`
+	PrimaryStorageUuid string `json:"primaryStorageUuid,omitempty"`
+	VmInstanceUuid string `json:"vmInstanceUuid,omitempty"`
+	DiskOfferingUuid string `json:"diskOfferingUuid,omitempty"`
+	RootImageUuid string `json:"rootImageUuid,omitempty"`
+	InstallPath string `json:"installPath,omitempty"`
+	Type string `json:"type,omitempty"`
+	Format string `json:"format,omitempty"`
+	Size int64 `json:"size,omitempty"`
+	ActualSize int64 `json:"actualSize,omitempty"`
+	DeviceId int `json:"deviceId,omitempty"`
+	State string `json:"state,omitempty"`
+	Status string `json:"status,omitempty"`
+	IsShareable bool `json:"isShareable,omitempty"`
+	VolumeQos string `json:"volumeQos,omitempty"`
+	LastDetachDate time.Time `json:"lastDetachDate,omitempty"`
+	LastVmInstanceUuid string `json:"lastVmInstanceUuid,omitempty"`
+	LastAttachDate time.Time `json:"lastAttachDate,omitempty"`
+	Protocol string `json:"protocol,omitempty"`
 }
 
-type VolumeFormatView struct {
-	Format                    string   `json:"format"`
-	MasterHypervisorType      string   `json:"masterHypervisorType"`
-	SupportingHypervisorTypes []string `json:"supportingHypervisorTypes"`
+// QueryVolumeView QueryVolume
+type QueryVolumeView struct {
+	Inventories []VolumeInventoryView `json:"inventories,omitempty"`
 }
 
-type VolumeCapabilitiesView struct {
-	MigrationToOtherPrimaryStorage   bool `json:"MigrationToOtherPrimaryStorage"`
-	MigrationInCurrentPrimaryStorage bool `json:"MigrationInCurrentPrimaryStorage"`
+// ResizeDataVolumeEventView ResizeDataVolumeEvent
+type ResizeDataVolumeEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
 }
 
-type VolumeQoSView struct {
-	VolumeUuid                      string `json:"volumeUuid"`                      // Cloud disk UUID
-	VolumeBandwidth                 int32  `json:"volumeBandwidth"`                 // Cloud disk bandwidth, default -1
-	VolumeBandwidthRead             int32  `json:"volumeBandwidthRead"`             // Cloud disk read bandwidth, default -1
-	VolumeBandwidthWrite            int32  `json:"volumeBandwidthWrite"`            // Cloud disk write bandwidth, default -1
-	VolumeBandwidthUpthreshold      int32  `json:"volumeBandwidthUpthreshold"`      // Cloud disk bandwidth upper limit, default -1
-	VolumeBandwidthReadUpthreshold  int32  `json:"volumeBandwidthReadUpthreshold"`  // Cloud disk read bandwidth upper limit, default -1
-	VolumeBandwidthWriteUpthreshold int32  `json:"volumeBandwidthWriteUpthreshold"` // Cloud disk write bandwidth upper limit, default -1
-	IopsTotal                       int32  `json:"iopsTotal"`                       // Total IOPS of the cloud disk
-	IopsRead                        int32  `json:"iopsRead"`                        // Read IOPS of the cloud disk
-	IopsWrite                       int32  `json:"iopsWrite"`                       // Write IOPS of the cloud disk
-	IopsTotalUpthreshold            int32  `json:"iopsTotalUpthreshold"`            // Total IOPS upper limit of the cloud disk, -1 means no upper limit
-	IopsReadUpthreshold             int32  `json:"iopsReadUpthreshold"`             // Read IOPS upper limit of the cloud disk, -1 means no upper limit
-	IopsWriteUpthreshold            int32  `json:"iopsWriteUpthreshold"`            // Write IOPS upper limit of the cloud disk, -1 means no upper limit
+// GetVmAttachableDataVolumeView GetVmAttachableDataVolume
+type GetVmAttachableDataVolumeView struct {
+	Inventories []VolumeInventoryView `json:"inventories,omitempty"`
 }
+
+// CreateDataVolumeFromVolumeSnapshotEventView CreateDataVolumeFromVolumeSnapshotEvent
+type CreateDataVolumeFromVolumeSnapshotEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// RecoverDataVolumeEventView RecoverDataVolumeEvent
+type RecoverDataVolumeEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateDataVolumeEventView CreateDataVolumeEvent
+type CreateDataVolumeEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// DeleteVolumeQosEventView DeleteVolumeQosEvent
+type DeleteVolumeQosEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// SyncVolumeSizeEventView SyncVolumeSizeEvent
+type SyncVolumeSizeEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// UpdateVolumeEventView UpdateVolumeEvent
+type UpdateVolumeEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// ResizeRootVolumeEventView ResizeRootVolumeEvent
+type ResizeRootVolumeEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// DetachDataVolumeFromVmEventView DetachDataVolumeFromVmEvent
+type DetachDataVolumeFromVmEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateDataVolumeFromVolumeBackupEventView CreateDataVolumeFromVolumeBackupEvent
+type CreateDataVolumeFromVolumeBackupEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// CreateDataVolumeFromVolumeTemplateEventView CreateDataVolumeFromVolumeTemplateEvent
+type CreateDataVolumeFromVolumeTemplateEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// ChangeVolumeStateEventView ChangeVolumeStateEvent
+type ChangeVolumeStateEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// AttachDataVolumeToVmEventView AttachDataVolumeToVmEvent
+type AttachDataVolumeToVmEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+
+// SetVolumeQosEventView SetVolumeQosEvent
+type SetVolumeQosEventView struct {
+	Inventory VolumeInventoryView `json:"inventory,omitempty"`
+}
+

@@ -3,72 +3,67 @@
 package client
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/param"
 	"github.com/terraform-zstack-modules/zsphere-sdk-go/pkg/view"
 )
 
-// CreateEip Create Elastic IP
-func (cli *ZSClient) CreateEip(params param.CreateEipParam) (view.EipInventoryView, error) {
-	var resp view.EipInventoryView
-	return resp, cli.Post("v1/eips", params, &resp)
+var _ = param.BaseParam{} // avoid unused import
+var _ view.MapView // avoid unused import
+
+// CreateEip creates Eip
+func (cli *ZSClient) CreateEip(ctx context.Context, params param.CreateEipParam) (*view.EipInventoryView, error) {
+	resp := view.EipInventoryView{}
+	if err := cli.PostWithRespKey(ctx, fmt.Sprintf("v1/eips"), "inventory", params, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+// AttachEip operates on Eip
+func (cli *ZSClient) AttachEip(ctx context.Context, eipUuid, vmNicUuid string, params param.AttachEipParam) (*view.EipInventoryView, error) {
+	resp := view.EipInventoryView{}
+	if err := cli.PostWithRespKey(ctx, fmt.Sprintf("v1/eips/%s/vm-instances/nics/%s", eipUuid, vmNicUuid), "inventory", params, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+// UpdateEip updates Eip
+func (cli *ZSClient) UpdateEip(ctx context.Context, uuid string, params param.UpdateEipParam) (*view.EipInventoryView, error) {
+	resp := view.EipInventoryView{}
+	if err := cli.PutWithSpec(ctx, "v1/eips", uuid, "actions", "inventory", map[string]interface{}{
+		"updateEip": params.Params,
+	}, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+// DeleteEip deletes Eip
+func (cli *ZSClient) DeleteEip(ctx context.Context, uuid string, deleteMode param.DeleteMode) error {
+	return cli.Delete(ctx, "v1/eips", uuid, string(deleteMode))
+}
+// QueryEip queries Eip list
+func (cli *ZSClient) QueryEip(ctx context.Context, params *param.QueryParam) ([]view.EipInventoryView, error) {
+	var resp []view.EipInventoryView
+	return resp, cli.List(ctx, "v1/eips", params, &resp)
 }
 
-// DeleteEip Delete Elastic IP
-func (cli *ZSClient) DeleteEip(uuid string, deleteMode param.DeleteMode) error {
-	return cli.Delete("v1/eips", uuid, string(deleteMode))
+func (cli *ZSClient) GetEip(ctx context.Context, uuid string) (*view.EipInventoryView, error) {
+	var resp view.EipInventoryView
+	if err := cli.Get(ctx, "v1/eips", uuid, nil, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
 
 // PageEip Pagination
-func (cli *ZSClient) PageEip(params param.QueryParam) ([]view.EipInventoryView, int, error) {
+func (cli *ZSClient) PageEip(ctx context.Context, params *param.QueryParam) ([]view.EipInventoryView, int, error) {
 	var eips []view.EipInventoryView
-	total, err := cli.Page("v1/eips", &params, &eips)
+	total, err := cli.Page(ctx, "v1/eips", params, &eips)
 	return eips, total, err
 }
-
-// QueryEip Query Elastic IP
-func (cli *ZSClient) QueryEip(params param.QueryParam) ([]view.EipInventoryView, error) {
-	resp := make([]view.EipInventoryView, 0)
-	return resp, cli.List("v1/eips", &params, &resp)
-}
-
-// GetEip Query Elastic IP by UUID
-func (cli *ZSClient) GetEip(uuid string) (view.EipInventoryView, error) {
-	var resp view.EipInventoryView
-	return resp, cli.Get("v1/eips", uuid, nil, &resp)
-}
-
-// UpdateEip Update Elastic IP
-func (cli *ZSClient) UpdateEip(params param.UpdateEipParam) (view.EipInventoryView, error) {
-	var resp view.EipInventoryView
-	return resp, cli.Put("v1/eips", params.UUID, params, &resp)
-}
-
-// ChangeEipState Change Virtual IP enable state
-func (cli *ZSClient) ChangeEipState(params param.ChangeEipStateParam) (view.EipInventoryView, error) {
-	var resp view.EipInventoryView
-	return resp, cli.Put("v1/eips", params.UUID, params, &resp)
-}
-
-// GetEipAttachableVmNics Get VM NICs that can be attached to the specified Elastic IP
-func (cli *ZSClient) GetEipAttachableVmNics(params param.GetEipAttachableVmNicsParam) ([]view.VmNicInventoryView, error) {
-	resp := make([]view.VmNicInventoryView, 0)
-	return resp, cli.GetWithSpec("v1/eips", params.EipUuid, "vm-instances/candidate-nics", responseKeyInventories, nil, &resp)
-}
-
-// GetVmNicAttachableEips Get Elastic IPs that can be attached to a VM NIC
-func (cli *ZSClient) GetVmNicAttachableEips(params param.GetVmNicAttachableEipsParam) ([]view.EipInventoryView, error) {
-	resp := make([]view.EipInventoryView, 0)
-	return resp, cli.GetWithSpec("v1/vm-instances/nics", params.VmNicUuid, "candidate-eips", responseKeyInventories, nil, &resp)
-}
-
-// AttachEip Attach Elastic IP
-func (cli *ZSClient) AttachEip(eipUuid, vmNicUuid string) error {
-	return cli.PutWithSpec("v1/eips", eipUuid, fmt.Sprintf("vm-instances/nics/%s", vmNicUuid), "", map[string]string{}, nil)
-}
-
-// DetachEip Detach Elastic IP
-func (cli *ZSClient) DetachEip(eipUuid string) error {
-	return cli.Delete("v1/eips", fmt.Sprintf("%s/vm-instances/nics", eipUuid), "")
+// DetachEip operates on Eip
+func (cli *ZSClient) DetachEip(ctx context.Context, uuid string, deleteMode param.DeleteMode) error {
+	return cli.Delete(ctx, "v1/eips", uuid, string(deleteMode))
 }

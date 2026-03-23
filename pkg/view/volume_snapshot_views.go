@@ -2,51 +2,54 @@
 
 package view
 
-type VolumeSnapshotView struct {
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// VolumeSnapshotInventoryView VolumeSnapshot
+type VolumeSnapshotInventoryView struct {
 	BaseInfoView
 	BaseTimeView
-
-	Type                      string `json:"type"`
-	VolumeUUID                string `json:"volumeUuid"`
-	TreeUUID                  string `json:"treeUuid"`
-	ParentUUID                string `json:"parentUuid"`
-	PrimaryStorageUUID        string `json:"primaryStorageUuid"`
-	PrimaryStorageInstallPath string `json:"primaryStorageInstallPath"`
-	VolumeType                string `json:"volumeType"`
-	Format                    string `json:"format"`
-	Latest                    bool   `json:"latest"`
-	Size                      int64  `json:"size"`
-	State                     string `json:"state"`
-	Status                    string `json:"status"`
-	Distance                  int    `json:"distance"`
-	GroupUuid                 string `json:"groupUuid"`
+	Description string `json:"description,omitempty"`
+	Type string `json:"type,omitempty"`
+	VolumeUuid string `json:"volumeUuid,omitempty"`
+	TreeUuid string `json:"treeUuid,omitempty"`
+	ParentUuid string `json:"parentUuid,omitempty"`
+	PrimaryStorageUuid string `json:"primaryStorageUuid,omitempty"`
+	PrimaryStorageInstallPath string `json:"primaryStorageInstallPath,omitempty"`
+	VolumeType string `json:"volumeType,omitempty"`
+	Format string `json:"format,omitempty"`
+	Latest bool `json:"latest,omitempty"`
+	Size int64 `json:"size,omitempty"`
+	Distance int `json:"distance,omitempty"`
+	State string `json:"state,omitempty"`
+	Status string `json:"status,omitempty"`
+	BackupStorageRefs []VolumeSnapshotBackupStorageRefInventoryView `json:"backupStorageRefs,omitempty"`
+	GroupUuid string `json:"groupUuid,omitempty"`
 }
 
-type VolumeSnapshotTreeView struct {
-	BaseInfoView
-	BaseTimeView
-
-	Current    bool                       `json:"current"`
-	Tree       VolumeSnapshotTreeNodeView `json:"tree"`
-	Status     string                     `json:"status"`
-	VolumeUUID string                     `json:"volumeUuid"`
+// DeleteVolumeSnapshotEventView DeleteVolumeSnapshotEvent
+type DeleteVolumeSnapshotEventView struct {
+	Success bool `json:"success,omitempty"`
 }
 
-type VolumeSnapshotTreeNodeView struct {
-	Inventory VolumeSnapshotView           `json:"inventory"`
-	Children  []VolumeSnapshotTreeNodeView `json:"children"`
+// CreateVolumesSnapshotEventView CreateVolumesSnapshotEvent
+type CreateVolumesSnapshotEventView struct {
+	Inventories []VolumeSnapshotInventoryView `json:"inventories,omitempty"`
 }
 
-type VolumeSnapshotSizeView struct {
-	Size       int64 `json:"size"`
-	ActualSize int64 `json:"actualSize"`
-	Success    bool  `json:"success"`
+// CreateVolumeSnapshotEventView CreateVolumeSnapshotEvent
+type CreateVolumeSnapshotEventView struct {
+	Inventory VolumeSnapshotInventoryView `json:"inventory,omitempty"`
 }
 
-type VolumeSnapshotShrinkResultView struct {
-	Result struct {
-		OldSize   int64 `json:"oldSize"`
-		Size      int64 `json:"size"`
-		DeltaSize int64 `json:"deltaSize"`
-	} `json:"shrinkResult"`
+// UpdateVolumeSnapshotEventView UpdateVolumeSnapshotEvent
+type UpdateVolumeSnapshotEventView struct {
+	Inventory VolumeSnapshotInventoryView `json:"inventory,omitempty"`
 }
+
+// QueryVolumeSnapshotView QueryVolumeSnapshot
+type QueryVolumeSnapshotView struct {
+	Inventories []VolumeSnapshotInventoryView `json:"inventories,omitempty"`
+}
+

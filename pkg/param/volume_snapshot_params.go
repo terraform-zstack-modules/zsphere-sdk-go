@@ -2,25 +2,43 @@
 
 package param
 
-type VolumeSnapshotParam struct {
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// DeleteVolumeSnapshotParamDetail DeleteVolumeSnapshot detail param
+type DeleteVolumeSnapshotParamDetail struct {
+	Direction *string `json:"direction,omitempty"`
+	Scope *string `json:"scope,omitempty"`
+	DeleteMode *string `json:"deleteMode,omitempty"`
+}
+
+// DeleteVolumeSnapshotParam DeleteVolumeSnapshot request param
+type DeleteVolumeSnapshotParam struct {
 	BaseParam
-
-	Params VolumeSnapshotDetailParam `json:"params"`
+	Params DeleteVolumeSnapshotParamDetail `json:"deleteVolumeSnapshot"`
+}
+// CreateVolumeSnapshotParamDetail CreateVolumeSnapshot detail param
+type CreateVolumeSnapshotParamDetail struct {
+	Name string `json:"name" validate:"required"`
+	Description *string `json:"description,omitempty"`
+	ResourceUuid *string `json:"resourceUuid,omitempty"`
+	TagUuids []string `json:"tagUuids,omitempty"`
 }
 
-type VolumeSnapshotDetailParam struct {
-	Name         string `json:"name" example:"chenjh-test-snapshot"`                         // Snapshot name
-	Description  string `json:"description" example:"JUST a test VolumeSnapshot For chenjh"` // Detailed description of the snapshot (optional)
-	ResourceUuid string `json:"resourceUuid" example:""`                                     // Resource Uuid (optional)
+// CreateVolumeSnapshotParam CreateVolumeSnapshot request param
+type CreateVolumeSnapshotParam struct {
+	BaseParam
+	Params CreateVolumeSnapshotParamDetail `json:"params"`
+}
+// UpdateVolumeSnapshotParamDetail UpdateVolumeSnapshot detail param
+type UpdateVolumeSnapshotParamDetail struct {
+	Name string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
 }
 
+// UpdateVolumeSnapshotParam UpdateVolumeSnapshot request param
 type UpdateVolumeSnapshotParam struct {
 	BaseParam
-
-	UpdateVolumeSnapshot UpdateVolumeSnapshotDetailParam `json:"updateVolumeSnapshot"`
-}
-
-type UpdateVolumeSnapshotDetailParam struct {
-	Name        string `json:"name"`        // New name for the snapshot
-	Description string `json:"description"` // New detailed description for the snapshot
+	Params UpdateVolumeSnapshotParamDetail `json:"updateVolumeSnapshot"`
 }

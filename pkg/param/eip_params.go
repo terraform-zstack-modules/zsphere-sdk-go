@@ -2,56 +2,63 @@
 
 package param
 
+import "time"
+
+var _ = time.Now() // avoid unused import
+
+// CreateEipParamDetail CreateEip detail param
+type CreateEipParamDetail struct {
+	Name string `json:"name" validate:"required"`
+	Description *string `json:"description,omitempty"`
+	VipUuid string `json:"vipUuid" validate:"required"`
+	VmNicUuid *string `json:"vmNicUuid,omitempty"`
+	UsedIpUuid *string `json:"usedIpUuid,omitempty"`
+	ResourceUuid *string `json:"resourceUuid,omitempty"`
+	TagUuids []string `json:"tagUuids,omitempty"`
+}
+
+// CreateEipParam CreateEip request param
 type CreateEipParam struct {
 	BaseParam
-
-	Params CreateEipDetailParam `json:"params"`
+	Params CreateEipParamDetail `json:"params"`
+}
+// AttachEipParamDetail AttachEip detail param
+type AttachEipParamDetail struct {
+	UsedIpUuid *string `json:"usedIpUuid,omitempty"`
 }
 
-type CreateEipDetailParam struct {
-	Name         string `json:"name"`                  // Resource name
-	Description  string `json:"description,omitempty"` // Detailed description
-	VipUuid      string `json:"vipUuid"`
-	VmNicUuid    string `json:"vmNicUuid,omitempty"`
-	UsedIpUuid   *int   `json:"usedIpUuid,omitempty"`   // Affinity group policy
-	ResourceUuid string `json:"resourceUuid,omitempty"` // Resource UUID. If specified, the image will use this value as the UUID.
+// AttachEipParam AttachEip request param
+type AttachEipParam struct {
+	BaseParam
+	Params AttachEipParamDetail `json:"params"`
+}
+// UpdateEipParamDetail UpdateEip detail param
+type UpdateEipParamDetail struct {
+	Name string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
 }
 
+// UpdateEipParam UpdateEip request param
 type UpdateEipParam struct {
 	BaseParam
-
-	UUID      string               `json:"uuid"` // Resource UUID, uniquely identifies the resource
-	UpdateEip UpdateEipDetailParam `json:"updateEip"`
+	Params UpdateEipParamDetail `json:"updateEip"`
+}
+// DeleteEipParamDetail DeleteEip detail param
+type DeleteEipParamDetail struct {
+	DeleteMode *string `json:"deleteMode,omitempty"`
 }
 
-type UpdateEipDetailParam struct {
-	Name        string `json:"name,omitempty"`        // Resource name
-	Description string `json:"description,omitempty"` // Detailed description
-}
-
-type ChangeEipStateParam struct {
+// DeleteEipParam DeleteEip request param
+type DeleteEipParam struct {
 	BaseParam
-
-	UUID           string                    `json:"uuid"` // Resource UUID, uniquely identifies the resource
-	ChangeEipState ChangeEipStateDetailParam `json:"changeEipState"`
+	Params DeleteEipParamDetail `json:"deleteEip"`
+}
+// DetachEipParamDetail DetachEip detail param
+type DetachEipParamDetail struct {
 }
 
-type ChangeEipStateDetailParam struct {
-	StateEvent StateEvent `json:"stateEvent"`
-}
-
-type GetEipAttachableVmNicsParam struct {
+// DetachEipParam DetachEip request param
+type DetachEipParam struct {
 	BaseParam
-
-	EipUuid string `json:"eipUuid,omitempty"` // Elastic IP UUID
-	VipUuid string `json:"vipUuid,omitempty"` // VIP UUID
-}
-
-type GetVmNicAttachableEipsParam struct {
-	BaseParam
-
-	VmNicUuid string `json:"vmNicUuid"`
-	IpVersion int    `json:"ipVersion,omitempty"`
-	Limit     int    `json:"limit,omitempty"`
-	Start     int    `json:"start,omitempty"`
+	Params DetachEipParamDetail `json:"detachEip"`
 }

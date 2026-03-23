@@ -1,15 +1,15 @@
-# ZStack ZSphere SDK for Go
+# ZSphere SDK for Go
 
 
 
-## ZStack ZSphere SDK for Go
+## ZSphere SDK for Go
 
-This repository provides a Go SDK for interacting with the ZStack ZSphere platform API. It allows developers to manage ZStack ZSphereresources programmatically using Go.
+This repository provides a Go SDK for interacting with the ZSphere platform API. It allows developers to manage ZSphere resources programmatically using Go.
 
 ### Features
 
-- Complete API coverage for ZStack cloud platform
-- Type-safe Go client for ZStack API operations
+- Complete API coverage for ZSphere platform
+- Type-safe Go client for ZSphere API operations
 - Support for authentication and session management
 - Structured request and response handling
 - Error handling and logging capabilities
@@ -33,21 +33,21 @@ import (
 
 // Create a client with account login authentication
 accountLoginClient := client.NewZSClient(
-    client.DefaultZSConfig("zsphere MN HOST IP").
+    client.DefaultZSConfig("ZStack MN HOST IP").
         LoginAccount("admin", "password").
         ReadOnly(false).
         Debug(true),
 )
-
+ctx := context.Background()
 // Login to ZStack
-_, err := accountLoginClient.Login()
+_, err := accountLoginClient.Login(ctx)
 if err != nil {
     // Handle error
 }
-defer accountLoginClient.Logout()
+defer accountLoginClient.Logout(ctx)
 
 // Query clusters
-clusters, err := accountLoginClient.QueryCluster(param.NewQueryParam())
+clusters, err := accountLoginClient.QueryCluster(ctx, param.NewQueryParam())
 if err != nil {
     // Handle error
 }
@@ -64,14 +64,14 @@ import (
 
 // Create a client with access key authentication
 accessKeyClient := client.NewZSClient(
-    client.DefaultZSConfig("zsphere MN HOST IP").
+    client.DefaultZSConfig("ZStack MN HOST IP").
         AccessKey("your-access-key-id", "your-access-key-secret").
         ReadOnly(false).
         Debug(false),
 )
-
+ctx := context.Background()
 // Query clusters
-clusters, err := accessKeyClient.QueryCluster(param.NewQueryParam())
+clusters, err := accessKeyClient.QueryCluster(ctx, param.NewQueryParam())
 if err != nil {
     // Handle error
 }
@@ -87,7 +87,7 @@ The SDK supports the following authentication methods:
 
 ### API Coverage
 
-This SDK provides Go bindings for all major ZStack API operations, including but not limited to:
+This SDK provides Go bindings for all major ZSphere API operations, including but not limited to:
 
 - Compute resources (instances, volumes)
 - Network resources (L2/L3 networks, security groups)
@@ -95,9 +95,25 @@ This SDK provides Go bindings for all major ZStack API operations, including but
 - Identity and access management
 - System management operations
 
+
+### Testing
+
+To run tests and generate an HTML report:
+
+**Windows (PowerShell):**
+```powershell
+./scripts/run_tests_with_report.ps1
+```
+
+**Linux (Bash):**
+```bash
+./scripts/run_tests_with_report.sh
+```
+
 ### Contributing
 
-Contributions to the ZStack Go SDK are welcome! Please feel free to submit a Pull Request.
+
+Contributions to the ZSphere Go SDK are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -111,13 +127,9 @@ This project is licensed under the Apache License 2.0 - see the LICENSE file for
 
 ### Related Projects
 
-- [Terraform Provider for ZStack](https://github.com/terraform-zstack-modules/terraform-provider-zsphere)
-- [ZStack Documentation](https://www.zstack.io/help/zstack_zsphere/api_reference/v4.10.10/1.html)
+- [ZSphere Documentation](https://www.zstack.io/help/zstack_zsphere/dev_manual/)
 
 ### Support
 
 For issues, questions and discussions please use the [GitHub Issues](https://github.com/terraform-zstack-modules/zsphere-sdk-go/issues).
 
----
-
-This SDK is not officially associated with ZStack zsphere. It is a community-maintained project designed to facilitate integration with ZStack zsphere platform.
